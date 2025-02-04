@@ -1,0 +1,12 @@
+# Node.js modules
+/node_modules
+
+# Build output
+/frontend/dist
+/frontend/build
+
+# .env file containing sensitive data
+/.env
+
+# Other unwanted files
+*.log
