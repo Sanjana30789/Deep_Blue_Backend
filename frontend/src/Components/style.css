@@ -1,126 +1,155 @@
-/* General Styles */
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-  }
-  
+  background-color: #f4f7fc;
+  color: #333;
+  font-size: 16px;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  padding: 20px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+}
+
+.profile-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.email {
+  font-size: 1rem;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.account-info {
+  font-size: 0.9rem;
+  color: #555;
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}
+
+.account-info h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.status {
+  font-weight: bold;
+  color: #28a745;
+}
+
+/* Content Section */
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  margin-left: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Grouped Readings */
+.date-group {
+  margin-bottom: 30px;
+}
+
+.date-group h2 {
+  font-size: 1.8rem;
+  color: #444;
+  margin-bottom: 15px;
+}
+
+.readings-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.readings-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+}
+
+.reading-card {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  min-width: calc(33.33% - 20px); /* Ensure 3 items per row */
+  flex-grow: 1;
+}
+
+.reading-card p {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.reading-card span {
+  font-weight: bold;
+  color: #555;
+}
+
+.timestamp {
+  font-size: 0.85rem;
+  color: #888;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
   .dashboard-container {
-    display: flex;
-    height: 100vh;
+    flex-direction: column;
   }
-  
-  /* Sidebar Styles */
+
   .sidebar {
-    width: 25%;
-    background: #fff;
-    padding: 20px;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    margin-left: 0; /* No margin from the left */
-  }
-  
-  .profile-img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 3px solid #3498db;
-    margin-bottom: 10px;
-  }
-  
-  .sidebar h2 {
-    margin: 10px 0;
-    font-size: 18px;
-    color: #333;
-  }
-  
-  .email {
-    font-size: 14px;
-    color: #666;
-  }
-  
-  .account-info {
-    margin-top: 20px;
-    text-align: left;
-    padding-left: 0; /* Remove padding from left */
-  }
-  
-  .account-info h3 {
-    font-size: 16px;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 5px;
-  }
-  
-  .account-info p {
-    font-size: 14px;
-    color: #444;
-    margin: 5px 0;
-  }
-  
-  .status {
-    color: green;
-    font-weight: bold;
-  }
-  
-  /* Main Content Styles */
-  .content {
-    flex: 1;
-    padding: 20px;
-  }
-  
-  .content h1 {
-    font-size: 24px;
-    color: #333;
+    width: 100%;
     margin-bottom: 20px;
   }
-  
-  /* Sensor Readings */
+
+  .content {
+    margin-left: 0;
+  }
+
   .readings-container {
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    flex-direction: column; /* Stack vertically on smaller screens */
   }
-  
+
   .reading-card {
-    padding: 15px;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 10px;
-    background: #f9f9f9;
-    border-radius: 5px;
+    min-width: 100%; /* Full width for smaller screens */
   }
-  
-  .reading-card p {
-    font-size: 16px;
-    margin: 5px 0;
-    color: #444;
-  }
-  
-  .reading-card span {
-    font-weight: bold;
-    color: #3498db;
-  }
-  
-  .timestamp {
-    font-size: 12px;
-    color: #777;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .dashboard-container {
-      flex-direction: column;
-    }
-  
-    .sidebar {
-      width: 100%;
-      box-shadow: none;
-      border-bottom: 2px solid #ddd;
-    }
-  
-    .content {
-      padding: 10px;
-    }
-  }
-  
+}

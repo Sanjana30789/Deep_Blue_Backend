@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import "./style.css"; // Import the CSS file
+import "./style.css"; 
+import sanjana from '../assets/sanjana.png';
 
 export default function Dashboard() {
   const [sensorData, setSensorData] = useState([]);
@@ -8,9 +9,16 @@ export default function Dashboard() {
     // Fetch data from backend
     const fetchData = async () => {
       try {
-        const response = await fetch("https://deep-blue-backend-1.onrender.com/data"); // Your backend URL
+        const response = await fetch("http://localhost:5000/data"); // Your backend URL
         const data = await response.json();
-        setSensorData(data.reverse().slice(0, 5)); // Show latest 5 readings
+        console.log("Fetched data:", data); // Debugging: Check if data is correctly fetched
+        
+        // Filter out duplicates based on sittingDuration and fsrReading
+        const filteredData = removeDuplicates(data);
+        
+        // Group data by date
+        const groupedData = groupByDate(filteredData);
+        setSensorData(groupedData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -22,13 +30,39 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  // Function to filter out duplicates based on sittingDuration and fsrReading
+  const removeDuplicates = (data) => {
+    const seen = new Set();
+    return data.filter((item) => {
+      const uniqueKey = `${item.sittingDuration}-${item.fsrReading}`; // Create unique key from sittingDuration and fsrReading
+      if (seen.has(uniqueKey)) {
+        return false; // Duplicate found, skip this item
+      } else {
+        seen.add(uniqueKey); // Mark as seen
+        return true; // Include item in filtered data
+      }
+    });
+  };
+
+  // Function to group data by date
+  const groupByDate = (data) => {
+    return data.reduce((acc, curr) => {
+      const date = new Date(curr.timestamp).toLocaleDateString(); // Extract date (ignores time)
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(curr);
+      return acc;
+    }, {});
+  };
+
   return (
     <div className="dashboard-container">
       {/* Left Sidebar */}
       <div className="sidebar">
-        <img src="https://via.placeholder.com/100" alt="User" className="profile-img" />
-        <h2>John Doe</h2>
-        <p className="email">johndoe@example.com</p>
+        <img src={sanjana} alt="User" className="profile-img" />
+        <h2>Sanjana Choubey</h2>
+        <p className="email">sanju763@gmail.com</p>
         <div className="account-info">
           <h3>Account Details</h3>
           <p>Status: <span className="status">Active</span></p>
@@ -40,12 +74,19 @@ export default function Dashboard() {
       <div className="content">
         <h1>📊 Live Sensor Readings</h1>
         <div className="readings-container">
-          {sensorData.length > 0 ? (
-            sensorData.map((data, index) => (
-              <div key={index} className="reading-card">
-                <p>Sitting Duration: <span>{data.sittingDuration} mins</span></p>
-                <p>FSR Reading: <span>{data.fsrReading}</span></p>
-                <p className="timestamp">⏱ {new Date(data.createdAt).toLocaleString()}</p>
+          {Object.keys(sensorData).length > 0 ? (
+            Object.entries(sensorData).map(([date, readings]) => (
+              <div key={date} className="date-group">
+                <h2>{date}</h2> {/* Display the date */}
+                <div className="readings-row">
+                  {readings.map((data, index) => (
+                    <div key={index} className="reading-card">
+                      <p>Sitting Duration: <span>{data.sittingDuration} mins</span></p>
+                      <p>FSR Reading: <span>{data.fsrReading}</span></p>
+                      <p className="timestamp">⏱ {new Date(data.timestamp).toLocaleString()}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))
           ) : (
