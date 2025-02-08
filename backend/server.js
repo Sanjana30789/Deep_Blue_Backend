@@ -51,6 +51,8 @@ mongoose.connect(mongoURI, {
   console.log("Error connecting to MongoDB Atlas:", err);
 });
 
+// For authentication of users 
+app.use("/api/auth", require("./routes/authRoutes.jsx"));
 
 // Route to fetch all data
 app.get('/data', async (req, res) => {

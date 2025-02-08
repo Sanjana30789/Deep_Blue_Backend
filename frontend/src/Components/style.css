@@ -153,3 +153,51 @@ h1 {
     min-width: 100%; /* Full width for smaller screens */
   }
 }
+
+
+/* Style for Logout Button */
+.logout-button {
+  margin-top: 20px;
+  padding: 10px;
+  width: 100%;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+
+/* Chart styling */
+.readings-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.recommendations {
+  margin-top: 30px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+.recommendations h3 {
+  font-size: 18px;
+  color: #333;
+}
+
+.recommendations p {
+  font-size: 16px;
+  color: #555;
+}

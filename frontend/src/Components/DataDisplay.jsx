@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { Line } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend } from "chart.js";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./style.css"; 
 import sanjana from '../assets/sanjana.png';
 
+// Register chart.js components
+ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);
+
 export default function Dashboard() {
   const [sensorData, setSensorData] = useState([]);
+  const [chartData, setChartData] = useState({});
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   useEffect(() => {
     // Fetch data from backend
@@ -19,6 +27,9 @@ export default function Dashboard() {
         // Group data by date
         const groupedData = groupByDate(filteredData);
         setSensorData(groupedData);
+        
+        // Prepare data for the chart
+        prepareChartData(groupedData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -56,6 +67,68 @@ export default function Dashboard() {
     }, {});
   };
 
+  // Function to prepare chart data
+  const prepareChartData = (groupedData) => {
+    const labels = [];
+    const sittingDurations = [];
+    const fsrReadings = [];
+
+    // Loop through the data and populate the arrays for chart
+    for (let date in groupedData) {
+      labels.push(date);
+      const dailyData = groupedData[date];
+      const totalSittingDuration = dailyData.reduce((sum, item) => sum + item.sittingDuration, 0);
+      const totalFSRReading = dailyData.reduce((sum, item) => sum + item.fsrReading, 0);
+
+      sittingDurations.push(totalSittingDuration);
+      fsrReadings.push(totalFSRReading);
+    }
+
+    // Set chart data
+    setChartData({
+      labels,
+      datasets: [
+        {
+          label: 'Sitting Duration (mins)',
+          data: sittingDurations,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          fill: true,
+        },
+        {
+          label: 'FSR Reading',
+          data: fsrReadings,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          fill: true,
+        },
+      ],
+    });
+  };
+
+  // Logic for recommendations
+  const getRecommendations = () => {
+    // Flatten the grouped data to a single array
+    const allData = Object.values(sensorData).flat();
+  
+    const totalSittingDuration = allData.reduce((sum, item) => sum + item.sittingDuration, 0);
+    const avgSittingDuration = totalSittingDuration / allData.length;
+  
+    if (avgSittingDuration > 120) {
+      return "You have been sitting for a long time. Consider standing up or walking for a few minutes.";
+    } else if (avgSittingDuration < 30) {
+      return "Good! You are staying active.";
+    }
+    return "Keep maintaining a balanced sitting time.";
+  };
+  
+
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove token from localStorage
+    navigate("/"); // Redirect to signup page
+  };
+
   return (
     <div className="dashboard-container">
       {/* Left Sidebar */}
@@ -68,12 +141,27 @@ export default function Dashboard() {
           <p>Status: <span className="status">Active</span></p>
           <p>Joined: Jan 2024</p>
         </div>
+        {/* Logout Button */}
+        <button className="logout-button" onClick={handleLogout}>Logout</button>
       </div>
 
       {/* Right Content - Sensor Readings */}
       <div className="content">
         <h1>📊 Live Sensor Readings</h1>
         <div className="readings-container">
+          {/* Display Chart */}
+          {chartData.labels ? (
+            <Line data={chartData} options={{ responsive: true }} />
+          ) : (
+            <p>Loading chart...</p>
+          )}
+          
+          {/* Display Recommendations */}
+          <div className="recommendations">
+            <h3>Recommendations</h3>
+            <p>{getRecommendations()}</p>
+          </div>
+
           {Object.keys(sensorData).length > 0 ? (
             Object.entries(sensorData).map(([date, readings]) => (
               <div key={date} className="date-group">
