@@ -1,128 +1,145 @@
-/* Global Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Arial', sans-serif;
-}
-
-body {
-  background-color: #f4f7fc;
-  color: #333;
-  font-size: 16px;
-}
-
-/* Dashboard Container */
 .dashboard-container {
   display: flex;
-  height: 100vh;
-  padding: 20px;
+  height: 100vh; 
 }
 
-/* Sidebar */
 .sidebar {
-  width: 250px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 250px; 
+  background-color: #1F2A40; 
   padding: 20px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: width 0.3s ease-in-out;
 }
 
 .profile-img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 20px;
-}
-
-h2 {
-  font-size: 1.5rem;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%; 
   margin-bottom: 10px;
 }
 
-.email {
-  font-size: 1rem;
-  color: #777;
-  margin-bottom: 20px;
+.sidebar h2, .sidebar p {
+  text-align: center; 
+  margin-bottom: 5px; 
+  color: #eee;
 }
 
 .account-info {
-  font-size: 0.9rem;
-  color: #555;
-  border-top: 1px solid #ddd;
-  padding-top: 20px;
+  margin-top: 20px;
+  text-align: center;
+  color: #eee;
 }
 
-.account-info h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
+.logout-button {
+  margin-top: auto; 
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
 
-.status {
-  font-weight: bold;
-  color: #28a745;
-}
-
-/* Content Section */
 .content {
-  flex-grow: 1;
+  flex: 1; 
   padding: 20px;
-  margin-left: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; 
+  background-color: #1A202A;
 }
 
-h1 {
-  font-size: 2rem;
-  color: #333;
+.content h1 {
+  color: #eee;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
 }
 
-/* Grouped Readings */
+.download-button {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.chart-container {
+  height: 400px;  
+  margin-bottom: 20px; 
+}
+
+.info-container {
+  display: flex;
+  gap: 20px; 
+  flex-wrap: wrap;
+  margin-bottom: 20px; 
+}
+
+.recommendations h3, .recommendations p {
+  color: #eee;
+}
+
+.recommendations, .recent-transactions {
+  flex: 1; 
+  border: 3px solid #eee; 
+  padding: 15px;
+}
+
+.recent-transactions .transaction {
+  display: flex;
+  justify-content: space-between; 
+  margin-bottom: 5px;
+}
+
+.summary-card {
+  width: 200px; 
+  border: 1px solid #ccc;
+  padding: 15px;
+  text-align: center;
+}
+
+.data-container { 
+  margin-bottom: 20px; 
+}
+
 .date-group {
-  margin-bottom: 30px;
+  margin-bottom: 20px; 
+  border-bottom: 1px solid #333; 
+  padding-bottom: 10px;
 }
 
 .date-group h2 {
-  font-size: 1.8rem;
-  color: #444;
-  margin-bottom: 15px;
-}
-
-.readings-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: #eee;
 }
 
 .readings-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  justify-content: flex-start;
+  gap: 15px; 
 }
 
 .reading-card {
-  background-color: #f9f9f9;
+  background-color: #1F2A40; 
+  color: #eee;
   padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: left;
-  min-width: calc(33.33% - 20px); /* Ensure 3 items per row */
-  flex-grow: 1;
+  border-radius: 5px;
+  border: 1px solid #eee; 
+  width: 200px; 
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); 
 }
 
 .reading-card p {
-  font-size: 1rem;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .reading-card span {
   font-weight: bold;
-  color: #555;
 }
 
 .timestamp {
@@ -131,73 +148,86 @@ h1 {
   text-align: right;
 }
 
+.data-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 150px;
+  margin-top: 20px;
+}
+
+.data-info h3 {
+  font-size: 1.2rem;
+  color: #eee;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
+  width: 100%;
+}
+
+.data-info p {
+  font-size: 1rem;
+  margin: 5px 0;
+  padding: 8px 12px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.data-info .status {
+  font-weight: bold;
+  color: white;
+}  
+
+/* Responsive Design */
 @media (max-width: 768px) {
   .dashboard-container {
     flex-direction: column;
   }
 
   .sidebar {
-    width: 100%;
-    margin-bottom: 20px;
+    width: 100%;  /* Full width */
+    height: 360px; /* Limited height to prevent overlapping */
+    max-height: 350px; /* Prevent sidebar from expanding too much */
+    flex-direction: column; 
+    justify-content: space-between;
+    padding: 10px 15px;
+    overflow: hidden;
+    
+  }
+
+  .sidebar h2, .sidebar p, .account-info {
+   color: #eee;
+  }
+
+  .profile-img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .logout-button {
+    font-size: 12px;
+    padding: 5px 10px;
   }
 
   .content {
-    margin-left: 0;
+    padding: 15px;
   }
 
-  .readings-container {
-    flex-direction: column; /* Stack vertically on smaller screens */
+  .info-container {
+    flex-direction: column;
+    gap: 10px;
   }
 
+  .summary-card,
   .reading-card {
-    min-width: 100%; /* Full width for smaller screens */
+    width: 100%; /* Full width on mobile */
   }
 }
 
 
-/* Style for Logout Button */
-.logout-button {
-  margin-top: 20px;
-  padding: 10px;
-  width: 100%;
-  background-color: #e74c3c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.logout-button:hover {
-  background-color: #c0392b;
-}
-
-
-/* Chart styling */
-.readings-container {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.recommendations {
-  margin-top: 30px;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
-}
-
-.recommendations h3 {
-  font-size: 18px;
-  color: #333;
-}
-
-.recommendations p {
-  font-size: 16px;
-  color: #555;
+.piechart-container h2{
+  color: #eee;
 }
