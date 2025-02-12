@@ -6,8 +6,14 @@
     padding: 0 !important;
 }
 
-.health-page {
-    width: 100vw;
+.health-page-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+.health-page-wrapper .health-page {
+    width: 100%;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -18,7 +24,7 @@
     box-sizing: border-box;
 }
 
-.form-container {
+.health-page-wrapper .form-container {
     background: white;
     padding: 2.5rem 4rem;
     border-radius: 12px;
@@ -29,18 +35,18 @@
     transition: transform 0.3s ease;
 }
 
-.form-container:hover {
+.health-page-wrapper .form-container:hover {
     transform: translateY(-5px);
 }
 
-.form-container h1 {
+.health-page-wrapper .form-container h1 {
     color: #2c3e50;
     margin-bottom: 1.5rem;
     font-size: 2rem;
     text-align: center;
 }
 
-form {
+.health-page-wrapper form {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* Three columns for better spacing */
     gap: 1.5rem;
@@ -48,12 +54,12 @@ form {
 }
 
 /* Make these inputs take full width */
-input[name="healthIssues"],
-.submit-btn {
+.health-page-wrapper input[name="healthIssues"],
+.health-page-wrapper .submit-btn {
     grid-column: 1 / -1;
 }
 
-input, select {
+.health-page-wrapper input, .health-page-wrapper select {
     padding: 0.8rem;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
@@ -61,12 +67,12 @@ input, select {
     transition: border-color 0.3s;
 }
 
-input:focus, select:focus {
+.health-page-wrapper input:focus, .health-page-wrapper select:focus {
     border-color: #3498db;
     outline: none;
 }
 
-.submit-btn {
+.health-page-wrapper .submit-btn {
     background: #3498db;
     color: white;
     padding: 1rem;
@@ -78,17 +84,17 @@ input:focus, select:focus {
     transition: background 0.3s;
 }
 
-.submit-btn:hover {
+.health-page-wrapper .submit-btn:hover {
     background: #2980b9;
 }
 
-.submit-btn:disabled {
+.health-page-wrapper .submit-btn:disabled {
     background: #95a5a6;
     cursor: not-allowed;
 }
 
 /* Response Container Styles */
-.response-container {
+.health-page-wrapper .response-container {
     width: 90%;
     max-width: 1400px;
     margin: 2rem auto;
@@ -98,7 +104,7 @@ input:focus, select:focus {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.response-container h2 {
+.health-page-wrapper .response-container h2 {
     color: #2c3e50;
     font-size: 2.5rem;
     text-align: center;
@@ -107,7 +113,7 @@ input:focus, select:focus {
     border-bottom: 3px solid #3498db;
 }
 
-.response-section {
+.health-page-wrapper .response-section {
     background: #f8f9fa;
     padding: 2rem;
     border-radius: 12px;
@@ -116,11 +122,11 @@ input:focus, select:focus {
     transition: transform 0.3s ease;
 }
 
-.response-section:hover {
+.health-page-wrapper .response-section:hover {
     transform: translateY(-5px);
 }
 
-.response-section h3 {
+.health-page-wrapper .response-section h3 {
     color: #2c3e50;
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
@@ -128,7 +134,7 @@ input:focus, select:focus {
     border-bottom: 2px solid #3498db;
 }
 
-.response-section h4 {
+.health-page-wrapper .response-section h4 {
     color: #34495e;
     margin: 1.5rem 0 1rem;
     font-size: 1.4rem;
@@ -136,14 +142,14 @@ input:focus, select:focus {
 }
 
 /* Meal Plan Styles */
-.meal-plan {
+.health-page-wrapper .meal-plan {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     padding: 1rem;
 }
 
-.meal-plan ul {
+.health-page-wrapper .meal-plan ul {
     background: white;
     padding: 1.5rem;
     border-radius: 12px;
@@ -151,12 +157,12 @@ input:focus, select:focus {
     transition: transform 0.3s ease;
 }
 
-.meal-plan ul:hover {
+.health-page-wrapper .meal-plan ul:hover {
     transform: translateY(-5px);
 }
 
 /* Macronutrients Styles */
-.macros {
+.health-page-wrapper .macros {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
@@ -166,7 +172,7 @@ input:focus, select:focus {
     margin: 2rem 0;
 }
 
-.macros p {
+.health-page-wrapper .macros p {
     font-size: 1.2rem;
     color: #2c3e50;
     padding: 1.5rem;
@@ -175,42 +181,42 @@ input:focus, select:focus {
     transition: transform 0.3s ease;
 }
 
-.macros p:hover {
+.health-page-wrapper .macros p:hover {
     transform: translateY(-5px);
     background: #e8f4f8;
 }
 
 /* List Styles */
-ul {
+.health-page-wrapper ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-li {
+.health-page-wrapper li {
     padding: 0.8rem;
     border-bottom: 1px solid #eee;
     color: #444;
     transition: background-color 0.2s;
 }
 
-li:hover {
+.health-page-wrapper li:hover {
     background-color: #f8f9fa;
 }
 
-li:last-child {
+.health-page-wrapper li:last-child {
     border-bottom: none;
 }
 
 /* Exercise and Posture Tips Styles */
-.response-section ul {
+.health-page-wrapper .response-section ul {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
     padding: 1rem;
 }
 
-.response-section ul li {
+.health-page-wrapper .response-section ul li {
     background: white;
     padding: 1.5rem;
     border-radius: 12px;
@@ -219,49 +225,49 @@ li:last-child {
     transition: transform 0.3s ease;
 }
 
-.response-section ul li:hover {
+.health-page-wrapper .response-section ul li:hover {
     transform: translateY(-5px);
     background: #f8f9fa;
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-    form {
+    .health-page-wrapper form {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 768px) {
-    .form-container {
+    .health-page-wrapper .form-container {
         padding: 2rem;
     }
 
-    form {
+    .health-page-wrapper form {
         grid-template-columns: 1fr;
     }
 
-    .response-container {
+    .health-page-wrapper .response-container {
         width: 100%;
         padding: 1.5rem;
     }
 
-    .meal-plan {
+    .health-page-wrapper .meal-plan {
         grid-template-columns: 1fr;
     }
 
-    .macros {
+    .health-page-wrapper .macros {
         grid-template-columns: 1fr;
         gap: 1rem;
         padding: 1rem;
     }
 
-    .response-section ul {
+    .health-page-wrapper .response-section ul {
         grid-template-columns: 1fr;
     }
 }
 
 /* Additional Styling for Better Visual Appeal */
-.response-section {
+.health-page-wrapper .response-section {
     background: #f8f9fa;
     padding: 2rem;
     border-radius: 12px;
@@ -270,11 +276,11 @@ li:last-child {
     transition: transform 0.3s ease;
 }
 
-.response-section:hover {
+.health-page-wrapper .response-section:hover {
     transform: translateY(-5px);
 }
 
-.response-section h3 {
+.health-page-wrapper .response-section h3 {
     color: #2c3e50;
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
@@ -282,7 +288,7 @@ li:last-child {
     border-bottom: 2px solid #3498db;
 }
 
-.response-section h4 {
+.health-page-wrapper .response-section h4 {
     color: #34495e;
     margin: 1.5rem 0 1rem;
     font-size: 1.4rem;
@@ -290,7 +296,7 @@ li:last-child {
 }
 
 /* Hydration Section */
-.response-section p {
+.health-page-wrapper .response-section p {
     background: white;
     padding: 1.5rem;
     border-radius: 12px;
@@ -302,7 +308,7 @@ li:last-child {
     transition: transform 0.3s ease;
 }
 
-.response-section p:hover {
+.health-page-wrapper .response-section p:hover {
     transform: translateY(-5px);
     background: #e8f4f8;
 }
@@ -314,6 +320,6 @@ li:last-child {
     100% { opacity: 1; }
 }
 
-.submit-btn:disabled {
+.health-page-wrapper .submit-btn:disabled {
     animation: pulse 1.5s infinite;
 }
