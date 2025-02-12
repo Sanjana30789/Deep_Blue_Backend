@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend } from "chart.js";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./style.css";
 import sanjana from '../assets/sanjana.png';
 import PieChartPage from './Piechart';
@@ -93,6 +93,7 @@ export default function Dashboard() {
           <p><span className="status">Dashboard</span></p>
           <p><span className="status">Profile Form</span></p>
           <p><span className="status">FAQ Page</span></p>
+          <p><Link to="/health" style={{ textDecoration: 'none' }}><span className="status">Health Planner</span></Link></p>
         </div>
         <button className="logout-button" onClick={handleLogout}>Logout</button>
       </div>

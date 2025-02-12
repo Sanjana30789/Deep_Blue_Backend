@@ -3,6 +3,7 @@ import Signup from "./Components/Signup";
 import Login from "./Components/Login";
 import Dashboard from "./Components/DataDisplay";
 import PieChartPage from './Components/Piechart'
+import HealthPage from './Components/HealthPage'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/piechart" element={<PieChartPage />} />
+        <Route path="/health" element={<HealthPage />} />
       </Routes>
     </Router>
   );
