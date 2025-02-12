@@ -84,143 +84,141 @@ const HealthPage = () => {
     };
 
     return (
-        <div className="health-page-wrapper">
-            <div className="health-page">
-                <div className="form-container">
-                    <h1>Health Planner</h1>
-                    <form onSubmit={handleSubmit}>
-                        <input 
-                            type="number" 
-                            name="weight" 
-                            placeholder="Weight (kg)" 
-                            value={formData.weight} 
-                            onChange={handleChange} 
-                            required 
-                            min="1"
-                            max="300"
-                        />
-                        <input 
-                            type="number" 
-                            name="height" 
-                            placeholder="Height (cm)" 
-                            value={formData.height} 
-                            onChange={handleChange} 
-                            required 
-                            min="1"
-                            max="300"
-                        />
-                        <input 
-                            type="number" 
-                            name="age" 
-                            placeholder="Age" 
-                            value={formData.age} 
-                            onChange={handleChange} 
-                            required 
-                            min="1"
-                            max="120"
-                        />
-                        <select name="gender" value={formData.gender} onChange={handleChange} required>
-                            <option value="">Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
-                        <select name="activityLevel" value={formData.activityLevel} onChange={handleChange} required>
-                            <option value="">Activity Level</option>
-                            <option value="sedentary">Sedentary</option>
-                            <option value="lightly active">Lightly Active</option>
-                            <option value="active">Active</option>
-                            <option value="very active">Very Active</option>
-                        </select>
-                        <select name="dietPreference" value={formData.dietPreference} onChange={handleChange} required>
-                            <option value="">Diet Preference</option>
-                            <option value="vegetarian">Vegetarian</option>
-                            <option value="non-veg">Non-Veg</option>
-                            <option value="vegan">Vegan</option>
-                            <option value="keto">Keto</option>
-                        </select>
-                        <input type="text" name="healthIssues" placeholder="Any Health Issues" value={formData.healthIssues} onChange={handleChange} />
-                        <button type="submit" className="submit-btn" disabled={loading}>
-                            {loading ? 'Generating Plan...' : 'Generate Health Plan'}
-                        </button>
-                    </form>
-                </div>
+        <div className="health-page">
+            <div className="form-container">
+                <h1>Health Planner</h1>
+                <form onSubmit={handleSubmit}>
+                    <input 
+                        type="number" 
+                        name="weight" 
+                        placeholder="Weight (kg)" 
+                        value={formData.weight} 
+                        onChange={handleChange} 
+                        required 
+                        min="1"
+                        max="300"
+                    />
+                    <input 
+                        type="number" 
+                        name="height" 
+                        placeholder="Height (cm)" 
+                        value={formData.height} 
+                        onChange={handleChange} 
+                        required 
+                        min="1"
+                        max="300"
+                    />
+                    <input 
+                        type="number" 
+                        name="age" 
+                        placeholder="Age" 
+                        value={formData.age} 
+                        onChange={handleChange} 
+                        required 
+                        min="1"
+                        max="120"
+                    />
+                    <select name="gender" value={formData.gender} onChange={handleChange} required>
+                        <option value="">Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                    <select name="activityLevel" value={formData.activityLevel} onChange={handleChange} required>
+                        <option value="">Activity Level</option>
+                        <option value="sedentary">Sedentary</option>
+                        <option value="lightly active">Lightly Active</option>
+                        <option value="active">Active</option>
+                        <option value="very active">Very Active</option>
+                    </select>
+                    <select name="dietPreference" value={formData.dietPreference} onChange={handleChange} required>
+                        <option value="">Diet Preference</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="non-veg">Non-Veg</option>
+                        <option value="vegan">Vegan</option>
+                        <option value="keto">Keto</option>
+                    </select>
+                    <input type="text" name="healthIssues" placeholder="Any Health Issues" value={formData.healthIssues} onChange={handleChange} />
+                    <button type="submit" className="submit-btn" disabled={loading}>
+                        {loading ? 'Generating Plan...' : 'Generate Health Plan'}
+                    </button>
+                </form>
+            </div>
 
-                {response && (
-                    <div className="response-container" ref={responseRef}>
-                        <h2>Your Personalized Health Plan</h2>
-                        
-                        <div className="response-section">
-                            <h3>Daily Calorie Requirement</h3>
-                            <p>{response.dailyCalories}</p>
-                        </div>
+            {response && (
+                <div className="response-container" ref={responseRef}>
+                    <h2>Your Personalized Health Plan</h2>
+                    
+                    <div className="response-section">
+                        <h3>Daily Calorie Requirement</h3>
+                        <p>{response.dailyCalories}</p>
+                    </div>
 
-                        <div className="response-section">
-                            <h3>Meal Plan</h3>
-                            <div className="meal-plan">
-                                <h4>Breakfast</h4>
-                                <ul>
-                                    {response.mealPlan.breakfast.map((item, index) => (
-                                        <li key={index}>{item}</li>
-                                    ))}
-                                </ul>
-                                
-                                <h4>Lunch</h4>
-                                <ul>
-                                    {response.mealPlan.lunch.map((item, index) => (
-                                        <li key={index}>{item}</li>
-                                    ))}
-                                </ul>
-                                
-                                <h4>Dinner</h4>
-                                <ul>
-                                    {response.mealPlan.dinner.map((item, index) => (
-                                        <li key={index}>{item}</li>
-                                    ))}
-                                </ul>
-                                
-                                <h4>Snacks</h4>
-                                <ul>
-                                    {response.mealPlan.snacks.map((item, index) => (
-                                        <li key={index}>{item}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div className="response-section">
-                            <h3>Macronutrients</h3>
-                            <div className="macros">
-                                <p>Protein: {response.macronutrients.protein}</p>
-                                <p>Carbs: {response.macronutrients.carbs}</p>
-                                <p>Fats: {response.macronutrients.fats}</p>
-                            </div>
-                        </div>
-
-                        <div className="response-section">
-                            <h3>Hydration</h3>
-                            <p>{response.hydration}</p>
-                        </div>
-
-                        <div className="response-section">
-                            <h3>Exercise Routine</h3>
+                    <div className="response-section">
+                        <h3>Meal Plan</h3>
+                        <div className="meal-plan">
+                            <h4>Breakfast</h4>
                             <ul>
-                                {response.exerciseRoutine.map((exercise, index) => (
-                                    <li key={index}>{exercise}</li>
+                                {response.mealPlan.breakfast.map((item, index) => (
+                                    <li key={index}>{item}</li>
                                 ))}
                             </ul>
-                        </div>
-
-                        <div className="response-section">
-                            <h3>Posture Tips</h3>
+                            
+                            <h4>Lunch</h4>
                             <ul>
-                                {response.postureTips.map((tip, index) => (
-                                    <li key={index}>{tip}</li>
+                                {response.mealPlan.lunch.map((item, index) => (
+                                    <li key={index}>{item}</li>
+                                ))}
+                            </ul>
+                            
+                            <h4>Dinner</h4>
+                            <ul>
+                                {response.mealPlan.dinner.map((item, index) => (
+                                    <li key={index}>{item}</li>
+                                ))}
+                            </ul>
+                            
+                            <h4>Snacks</h4>
+                            <ul>
+                                {response.mealPlan.snacks.map((item, index) => (
+                                    <li key={index}>{item}</li>
                                 ))}
                             </ul>
                         </div>
                     </div>
-                )}
-            </div>
+
+                    <div className="response-section">
+                        <h3>Macronutrients</h3>
+                        <div className="macros">
+                            <p>Protein: {response.macronutrients.protein}</p>
+                            <p>Carbs: {response.macronutrients.carbs}</p>
+                            <p>Fats: {response.macronutrients.fats}</p>
+                        </div>
+                    </div>
+
+                    <div className="response-section">
+                        <h3>Hydration</h3>
+                        <p>{response.hydration}</p>
+                    </div>
+
+                    <div className="response-section">
+                        <h3>Exercise Routine</h3>
+                        <ul>
+                            {response.exerciseRoutine.map((exercise, index) => (
+                                <li key={index}>{exercise}</li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div className="response-section">
+                        <h3>Posture Tips</h3>
+                        <ul>
+                            {response.postureTips.map((tip, index) => (
+                                <li key={index}>{tip}</li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
