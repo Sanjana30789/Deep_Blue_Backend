@@ -246,3 +246,80 @@
 .piechart-container h2{
   color: #eee;
 }
+
+
+.readings-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  margin: auto;
+}
+
+.date-group {
+  width: 100%;
+  max-width: 800px; /* Limit width for better readability */
+  background: #1F2A40;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px 0;
+  transition: transform 0.2s ease-in-out;
+  border-left: 5px solid #ffcc00;
+}
+
+.date-group:hover {
+  transform: scale(1.02);
+}
+
+.date-group h2 {
+  text-align: center;
+  color: #eee;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.readings-row {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.reading-card {
+  width: 90%;
+  max-width: 350px;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  transition: all 0.3s;
+  
+}
+
+.reading-card:hover {
+  background: #eaf2ff;
+}
+
+.reading-card p {
+  font-size: 1rem;
+  color: #444;
+  margin: 5px 0;
+}
+
+.reading-card span {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.timestamp {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.today-highlight {
+  background: #1F2A40 !important;
+  border-left: 5px solid #ffcc00;
+}

@@ -3,7 +3,7 @@ import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend } from "chart.js";
 import { useNavigate, Link } from "react-router-dom";
 import "./style.css";
-import sanjana from '../assets/sanjana.png';
+import defaultProfile from '../assets/sanjana.png'; // Default profile image
 import PieChartPage from './Piechart';
 import GraphPage from './GraphPage';
 
@@ -12,28 +12,77 @@ ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, T
 export default function Dashboard() {
   const [sensorData, setSensorData] = useState({});
   const [chartData, setChartData] = useState({});
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+  
+      try {
+        const response = await fetch("http://localhost:5000/api/auth/user", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await response.json();
+  
+        if (response.ok) {
+          setUser(data);
+        } else {
+          console.error("Error fetching user data:", data.msg);
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+  
+    const fetchSensorData = async () => {
       try {
         const response = await fetch("http://localhost:5000/data");
         const data = await response.json();
-        console.log("Fetched data:", data);
-
-        const filteredData = removeDuplicates(data);
-        const groupedData = groupByDate(filteredData);
-        setSensorData(groupedData);
-        prepareChartData(groupedData);
+  
+        if (data.length > 0) {
+          const groupedData = {};
+  
+          data.forEach((reading) => {
+            const date = new Date(reading.timestamp).toLocaleDateString();
+            // Store only the last reading per date
+            groupedData[date] = reading;
+          });
+  
+          setSensorData(groupedData);
+        }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching sensor data:", error);
       }
     };
-
-    fetchData();
-    const interval = setInterval(fetchData, 5000);
+  
+    fetchUserData();
+    fetchSensorData();
+  
+    
+    const interval = setInterval(async () => {
+      try {
+        const today = new Date().toLocaleDateString();
+        const response = await fetch("http://localhost:5000/data/latest"); // Fetch only the latest entry for today
+        const latestData = await response.json();
+  
+        setSensorData((prevData) => ({
+          ...prevData,
+          [today]: latestData, // Update only today's entry
+        }));
+      } catch (error) {
+        console.error("Error updating today's data:", error);
+      }
+    }, 0); 
+  
     return () => clearInterval(interval);
   }, []);
+  
 
   const removeDuplicates = (data) => {
     const seen = new Set();
@@ -59,19 +108,6 @@ export default function Dashboard() {
     }, {});
   };
 
-  const getRecommendations = () => {
-    const allData = Object.values(sensorData).flat();
-    const totalSittingDuration = allData.reduce((sum, item) => sum + item.sittingDuration, 0);
-    const avgSittingDuration = totalSittingDuration / allData.length;
-
-    if (avgSittingDuration > 120) {
-      return "You have been sitting for a long time. Consider standing up or walking for a few minutes.";
-    } else if (avgSittingDuration < 30) {
-      return "Good! You are staying active.";
-    }
-    return "Keep maintaining a balanced sitting time.";
-  };
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
@@ -80,46 +116,56 @@ export default function Dashboard() {
   return (
     <div className="dashboard-container">
       <div className="sidebar">
-        <img src={sanjana} alt="User" className="profile-img" />
-        <h2>Sanjana Choubey</h2>
-        <p className="email">sanju763@gmail.com</p>
+      <img src={user?.profilePhoto ? user.profilePhoto : defaultProfile} alt="User" className="profile-img" onError={(e) => e.target.src = defaultProfile} />
+
+
+        <h2>{user?.name || "Loading..."}</h2>
+        <p className="email">{user?.email || ""}</p>
+
         <div className="account-info">
           <h3>Account Details</h3>
           <p>Status: <span className="status">Active</span></p>
           <p>Joined: Jan 2024</p>
         </div>
+
         <div className="data-info">
           <h3>Pages</h3>
           <p><span className="status">Dashboard</span></p>
           <p><span className="status">Profile Form</span></p>
           <p><span className="status">FAQ Page</span></p>
+          <p><Link to="/ai-recommendation" style={{ textDecoration: 'none' }}><span className="status">AI Recommendations</span></Link></p>
           <p><Link to="/health" style={{ textDecoration: 'none' }}><span className="status">Health Planner</span></Link></p>
+          <p><Link to="/analytics" style={{ textDecoration: 'none' }}><span className="status">Analytics</span></Link></p>
         </div>
+
         <button className="logout-button" onClick={handleLogout}>Logout</button>
       </div>
 
       <div className="content">
         <h1>📊 Live Sensor Readings</h1>
-        <div className="readings-container" style={{ width: "100%" }}>
-          {Object.keys(sensorData).length > 0 ? (
-            Object.entries(sensorData).map(([date, readings]) => (
-              <div key={date} className="date-group" style={{ width: "100%" }}>
-                <h2>{date}</h2>
-                <div className="readings-row" style={{ display: "flex", flexWrap: "wrap", width: "100%", overflowX: "auto" }}>
-                  {readings.map((data, index) => (
-                    <div key={index} className="reading-card" style={{ flex: "0 0 auto", minWidth: "200px", margin: "5px" }}>
-                      <p>Sitting Duration: <span>{data.sittingDuration} mins</span></p>
-                      <p>FSR Reading: <span>{data.fsrReading}</span></p>
-                      <p className="timestamp">⏱ {new Date(data.timestamp).toLocaleString()}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>No data available</p>
-          )}
+        <div className="readings-container">
+  {Object.keys(sensorData).length > 0 ? (
+    Object.entries(sensorData).map(([date, reading]) => (
+      <div 
+        key={date} 
+        className={`date-group ${date === new Date().toLocaleDateString() ? "today-highlight" : ""}`}
+      >
+        <h2>{date === new Date().toLocaleDateString() ? "📅 Today's Readings" : `📅 ${date}`}</h2>
+        <div className="readings-row">
+          <div className="reading-card">
+            <p>Sitting Duration: <span>{reading.sittingDuration} mins</span></p>
+            <p>FSR Reading: <span>{reading.fsrReading}</span></p>
+            <p>Measured Weight: <span>{reading.measureweight}</span></p>
+            <p className="timestamp">⏱ {new Date(reading.timestamp).toLocaleString()}</p>
+          </div>
         </div>
+      </div>
+    ))
+  ) : (
+    <p>No data available</p>
+  )}
+</div>
+
 
         <div className="piechart-container">
           <h2>📊 Sitting vs. Active Time</h2>
