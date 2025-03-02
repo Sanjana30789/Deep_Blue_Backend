@@ -13,7 +13,7 @@ export default function LandingPage() {
       </video>
       <div style={styles.overlay}></div>
       <div style={styles.content}>
-        <h1 style={styles.heading}>Welcome to Our Platform</h1>
+        <h1 style={styles.heading}>Transform the Way You Sit – Because Comfort Should Be Smart!</h1>
         <p style={styles.paragraph}>Your journey begins here.</p>
         <button style={styles.button} onClick={() => navigate("/signup")}>
           Get Started
@@ -53,17 +53,19 @@ const styles = {
   content: {
     position: "relative",
     textAlign: "center",
-    color: "#fff",
+    color: "#eee",
     zIndex: 2,
   },
   heading: {
     fontSize: "3rem",
     fontWeight: "bold",
     marginBottom: "10px",
+    color : "#eee",
   },
   paragraph: {
     fontSize: "1.5rem",
     marginBottom: "20px",
+
   },
   button: {
     padding: "12px 24px",

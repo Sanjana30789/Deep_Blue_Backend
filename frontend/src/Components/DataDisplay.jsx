@@ -17,23 +17,14 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-  
       try {
-        const response = await fetch("http://localhost:5000/api/auth/user", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await fetch("http://localhost:5000/api/auth/user");
         const data = await response.json();
   
         if (response.ok) {
           setUser(data);
         } else {
           console.error("Error fetching user data:", data.msg);
-          navigate("/login");
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -50,7 +41,6 @@ export default function Dashboard() {
   
           data.forEach((reading) => {
             const date = new Date(reading.timestamp).toLocaleDateString();
-            // Store only the last reading per date
             groupedData[date] = reading;
           });
   
@@ -64,24 +54,24 @@ export default function Dashboard() {
     fetchUserData();
     fetchSensorData();
   
-    
     const interval = setInterval(async () => {
       try {
         const today = new Date().toLocaleDateString();
-        const response = await fetch("http://localhost:5000/data/latest"); // Fetch only the latest entry for today
+        const response = await fetch("http://localhost:5000/data"); 
         const latestData = await response.json();
   
         setSensorData((prevData) => ({
           ...prevData,
-          [today]: latestData, // Update only today's entry
+          [today]: latestData,
         }));
       } catch (error) {
         console.error("Error updating today's data:", error);
       }
-    }, 0); 
+    }, 9000);  // Set a reasonable interval
   
     return () => clearInterval(interval);
   }, []);
+  
   
 
   const removeDuplicates = (data) => {
@@ -151,8 +141,8 @@ export default function Dashboard() {
         <div className="readings-row">
           <div className="reading-card">
             <p>Sitting Duration: <span>{reading.sittingDuration} mins</span></p>
-            <p>FSR Reading: <span>{reading.fsrReading}</span></p>
-            <p>Measured Weight: <span>{reading.measureweight}</span></p>
+            <p>FSR Reading: <span>{reading.fsr1}</span></p>
+            {/* <p>Measured Weight: <span>{reading.measureweight}</span></p> */}
             <p className="timestamp">⏱ {new Date(reading.timestamp).toLocaleString()}</p>
           </div>
         </div>
@@ -177,3 +167,7 @@ export default function Dashboard() {
     </div>
   );
 }
+
+
+
+

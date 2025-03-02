@@ -19,6 +19,23 @@ export default function Login() {
     }
   };
 
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const res = await axios.post("http://localhost:5000/api/auth/login", user);
+      
+  //     if (res.data.token) {
+  //       localStorage.setItem("token", res.data.token); // Store the token
+  //     }
+      
+  //     navigate("/dashboard");
+  //   } catch (err) {
+  //     console.error(err.response?.data?.msg);
+  //   }
+  // };
+  
+  
   return (
     <div style={styles.container}>
       <form onSubmit={handleSubmit} style={styles.form}>

@@ -7,15 +7,9 @@ export default function Signup() {
     name: "",
     email: "",
     password: "",
-    profilePhoto: null, // ✅ Match backend field name
   });
   
   const navigate = useNavigate();
-
-  const handleFileChange = (e) => {
-    setUser({ ...user, profilePhoto: e.target.files[0] }); // ✅ Change profilePic to profilePhoto
-  };
-  
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
@@ -24,21 +18,8 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const formData = new FormData();
-    formData.append("name", user.name);
-    formData.append("email", user.email);
-    formData.append("password", user.password);
-    if (user.profilePhoto) formData.append("profilePhoto", user.profilePhoto); // ✅ Append file
-  
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/signup", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-  
-      if (res.data.profilePhoto) {
-        localStorage.setItem("profilePhoto", res.data.profilePhoto); // ✅ Store URL in localStorage
-      }
-  
+      await axios.post("http://localhost:5000/api/auth/signup", user);
       navigate("/dashboard");
     } catch (err) {
       console.error(err.response?.data?.msg || "Signup failed");
@@ -46,20 +27,20 @@ export default function Signup() {
     }
   };
   
-
   return (
     <div style={styles.pageContainer}>
       <div style={styles.container}>
-        <form onSubmit={handleSubmit} style={styles.form} encType="multipart/form-data">
+        <form onSubmit={handleSubmit} style={styles.form}>
           <h2 style={styles.heading}>Sign Up</h2>
           <input type="text" name="name" placeholder="Name" onChange={handleChange} required style={styles.input} />
           <input type="email" name="email" placeholder="Email" onChange={handleChange} required style={styles.input} />
           <input type="password" name="password" placeholder="Password" onChange={handleChange} required style={styles.input} />
-          <input type="file" accept="image/*" onChange={handleFileChange} required /> {/* ✅ File upload */}
           <button type="submit" style={styles.button}>Sign Up</button>
           <p style={styles.loginText}>
             Already have an account?{" "}
-            <span style={styles.loginLink} onClick={() => navigate("/login")}>Login</span>
+            <span style={styles.loginLink} onClick={() => navigate("/login")}>
+              Login
+            </span>
           </p>
         </form>
       </div>
