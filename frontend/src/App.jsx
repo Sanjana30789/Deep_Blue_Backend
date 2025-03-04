@@ -8,6 +8,8 @@ import HealthPage from './Components/HealthPage';
 import Analytics from './Components/Analytics';
 import AIRecommendation from './Components/AI'
 
+import ChairRegistration from './Components/chairRegister'
+
 function App() {
   return (
     <Router>
@@ -20,6 +22,8 @@ function App() {
         <Route path="/health" element={<HealthPage />} />
         <Route path="/analysis" element={<Analytics />} />
         <Route path ="/ai" element = {<AIRecommendation/>}/>
+
+        <Route path ="/chair-registration" element = {<ChairRegistration/>}/>
       </Routes>
     </Router>
   );

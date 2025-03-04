@@ -3,42 +3,39 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const [user, setUser] = useState({ email: "", password: "" });
+  const [loginDetails, setLoginDetails] = useState({
+    email: "",
+    password: "",
+  });
+
   const navigate = useNavigate();
 
-  const handleChange = (e) => setUser({ ...user, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setLoginDetails({ ...loginDetails, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", user);
-      localStorage.setItem("token", res.data.token);
-      navigate("/dashboard");
+      const response = await axios.post("http://localhost:5000/api/auth/login", loginDetails);
+
+      if (response.data.user_id) {
+        localStorage.setItem("user_id", response.data.user_id);
+        alert("Login successful!");
+        navigate("/chair-registration");
+      } else {
+        alert("Login failed, user_id missing!");
+      }
     } catch (err) {
-      console.error(err.response.data.msg);
+      console.error("Login Error:", err.response?.data || err.message);
+      alert(err.response?.data?.msg || "Login failed");
     }
   };
 
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const res = await axios.post("http://localhost:5000/api/auth/login", user);
-      
-  //     if (res.data.token) {
-  //       localStorage.setItem("token", res.data.token); // Store the token
-  //     }
-      
-  //     navigate("/dashboard");
-  //   } catch (err) {
-  //     console.error(err.response?.data?.msg);
-  //   }
-  // };
-  
-  
   return (
     <div style={styles.container}>
-      <form onSubmit={handleSubmit} style={styles.form}>
+       <div style={styles.containers}>
+       <form onSubmit={handleSubmit} style={styles.form}>
         <h2 style={styles.heading}>Login</h2>
         <input
           type="email"
@@ -58,6 +55,8 @@ export default function Login() {
         />
         <button type="submit" style={styles.button}>Login</button>
       </form>
+       </div>
+    
     </div>
   );
 }
@@ -67,39 +66,53 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100vh",
-    backgroundColor: "#f0f4f8",
+    minHeight: "100vh",
+    background: "linear-gradient(to bottom right, #4f46e5, #9333ea)",
   },
-  form: {
-    backgroundColor: "#fff",
-    padding: "30px",
-    borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  containers : {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     width: "100%",
     maxWidth: "400px",
-  },
-  heading: {
+    padding: "20px",
+    background: "white",
+    borderRadius: "15px",
+    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
     textAlign: "center",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+  },
+
+
+
+  heading: {
     fontSize: "24px",
-    marginBottom: "20px",
+    fontWeight: "bold",
     color: "#333",
+    marginBottom: "20px",
   },
   input: {
-    width: "100%",
+    width: "90%",
     padding: "12px",
     marginBottom: "15px",
     border: "1px solid #ccc",
-    borderRadius: "4px",
+    borderRadius: "8px",
     fontSize: "16px",
+    outline: "none",
   },
   button: {
     width: "100%",
     padding: "12px",
-    backgroundColor: "#007bff",
-    color: "#fff",
+    backgroundColor: "#9333ea",
+    color: "white",
     border: "none",
-    borderRadius: "4px",
+    borderRadius: "8px",
     fontSize: "16px",
     cursor: "pointer",
+    transition: "all 0.3s ease",
   },
 };

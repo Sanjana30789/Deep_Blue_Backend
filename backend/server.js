@@ -19,20 +19,20 @@ const mongoURI = process.env.MONGODB_URL;
 // post all data 
 app.post('/data', async (req, res) => {
   console.log("Raw Request Body:", req.body);
-  console.log("Extracted Chair ID:", req.body.chair_id);
-  console.log("Type of Chair ID:", typeof req.body.chair_id);
+  // console.log("Extracted Chair ID:", req.body.chair_id);
+  // console.log("Type of Chair ID:", typeof req.body.chair_id);
 
-  if (!req.body.chair_id) {
-    return res.status(400).json({ error: "chair_id is missing in request" });
-  }
+  // if (!req.body.chair_id) {
+  //   return res.status(400).json({ error: "chair_id is missing in request" });
+  // }
 
   try {
     const {
       sittingDuration, fsr1, fsr2, fsr3, fsr4, totalsittingduration,
-      relaxation_time, sitting_threhold, continous_vibration, measureweight, chair_id
+      relaxation_time, sitting_threhold, continous_vibration, measureweight
     } = req.body;
 
-    console.log("Extracted Values - Chair ID:", chair_id);
+    // console.log("Extracted Values - Chair ID:", chair_id);
 
     const newData = new Data({
       sittingDuration,
@@ -40,7 +40,7 @@ app.post('/data', async (req, res) => {
       totalsittingduration,
       relaxation_time,
       sitting_threhold,
-      chair_id: String(chair_id), 
+      // chair_id: String(chair_id), 
       continous_vibration: Boolean(continous_vibration),
       measureweight: Boolean(measureweight)
     });
@@ -146,6 +146,7 @@ mongoose.connect(mongoURI, {
 
 // Authentication route
 app.use("/api/auth", require("./routes/authRoutes.jsx"));
+app.use("/api/chair",require("./routes/chairRoutes.jsx"))
 
 // all data
 app.get('/data', async (req, res) => {
@@ -169,22 +170,61 @@ app.get("/user", async (req, res) => {
 });
 
 
+// app.get('/data/:chair_id', async (req, res) => {
+//   console.log("Received Request for Chair ID:", req.params.chair_id);  
+
+//   try {
+//       const data = await Data.findOne({ chair_id: req.params.chair_id }); 
+//       console.log("MongoDB Response:", data);  
+
+//       if (!data) {
+//           return res.status(404).json({ message: "Data not found" });
+//       }
+//       res.json(data);  
+//   } catch (err) {
+//       console.error("Error Fetching Data:", err);
+//       res.status(400).json({ message: err.message});
+//   }
+// });
+
+
 app.get('/data/:chair_id', async (req, res) => {
-  console.log("Received Request for Chair ID:", req.params.chair_id);  
-
   try {
-      const data = await Data.findOne({ chair_id: req.params.chair_id }); 
-      console.log("MongoDB Response:", data);  
+      const data = await Data.find({ chair_id: req.params.chair_id });
 
-      if (!data) {
-          return res.status(404).json({ message: "Data not found" });
+      if (!data || data.length === 0) {
+          return res.status(404).json({ message: "No sensor data found" });
       }
-      res.json(data);  
+
+      res.json(data);
   } catch (err) {
       console.error("Error Fetching Data:", err);
-      res.status(400).json({ message: err.message});
+      res.status(500).json({ message: "Server error" });
   }
 });
+
+
+
+app.post('/data/:chair_id', async (req, res) => {
+  console.log("Received Data for Chair ID:", req.params.chair_id, "with Body:", req.body);
+
+  try {
+      const newData = new Data({
+          chair_id: req.params.chair_id,  // Assign chair_id from URL parameter
+          ...req.body  // Spread the rest of the request body into the new object
+      });
+
+      const savedData = await newData.save(); // Save to MongoDB
+
+      console.log("Data Saved:", savedData);
+
+      res.status(201).json(savedData);  // Respond with the saved data
+  } catch (err) {
+      console.error("Error Saving Data:", err);
+      res.status(500).json({ message: "Server error while saving data" });
+  }
+});
+
 
 
 app.listen(port, () => {
