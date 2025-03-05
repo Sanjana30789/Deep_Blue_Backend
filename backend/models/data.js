@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const dataSchema = new mongoose.Schema({
 
   sittingDuration: { type: Number, required: true }, 
-  // chair_id : { type: String, required: true },
+  chair_id: { type: mongoose.Schema.Types.String, ref: "Chair", required: true },
   fsr1: { type: Number, required: true }, 
   fsr2: { type: Number, required: true },  
   fsr3: { type: Number, required: true },

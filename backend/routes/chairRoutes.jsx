@@ -109,35 +109,35 @@ router.get('/chair-data/:chair_id', async (req, res) => {
 
 
 
-router.post('/add-data', async (req, res) => {
-    try {
-        const { sittingDuration, fsr1, fsr2, fsr3, fsr4, totalsittingduration, measureweight } = req.body;
+// router.post('/add-data', async (req, res) => {
+//     try {
+//         const { sittingDuration, fsr1, fsr2, fsr3, fsr4, totalsittingduration, measureweight } = req.body;
 
-        // Find the user and get their chair_id
-        const user = await User.findOne({ email });
-        if (!user) return res.status(404).json({ msg: "User not found" });
+//         // Find the user and get their chair_id
+//         const user = await User.findOne({ email });
+//         if (!user) return res.status(404).json({ msg: "User not found" });
 
-        const chair_id = user.chair_id; // Get chair_id from the user
+//         const chair_id = user.chair_id; // Get chair_id from the user
 
-        // Create a new data entry
-        const newData = new Data({
-            chair_id,
-            sittingDuration,
-            fsr1,
-            fsr2,
-            fsr3,
-            fsr4,
-            totalsittingduration,
-            measureweight
-        });
+//         // Create a new data entry
+//         const newData = new Data({
+//             chair_id,
+//             sittingDuration,
+//             fsr1,
+//             fsr2,
+//             fsr3,
+//             fsr4,
+//             totalsittingduration,
+//             measureweight
+//         });
 
-        await newData.save();
-        res.status(201).json({ msg: "Data added successfully", data: newData });
+//         await newData.save();
+//         res.status(201).json({ msg: "Data added successfully", data: newData });
 
-    } catch (err) {
-        console.error("Error adding data:", err);
-        res.status(500).json({ msg: "Server error" });
-    }
-});
+//     } catch (err) {
+//         console.error("Error adding data:", err);
+//         res.status(500).json({ msg: "Server error" });
+//     }
+// });
 
   module.exports = router;

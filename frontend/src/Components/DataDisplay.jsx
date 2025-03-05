@@ -34,7 +34,7 @@ export default function Dashboard() {
 
     const fetchSensorData = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/data`);
+            const response = await fetch(`http://localhost:5000/data/${chair_id}`);
             const data = await response.json();
             const today = new Date().toLocaleDateString();
             const todayReadings = data.filter(reading => new Date(reading.timestamp).toLocaleDateString() === today);
@@ -70,7 +70,7 @@ export default function Dashboard() {
           <h3>Account Details</h3>
           <p>Status: <span className="status">Active</span></p>
           <p>Joined: Jan 2024</p>
-          <p>Chair ID: <span>{user?.chair_id || "Not Assigned"}</span></p>
+          {/* <p>Chair ID: <span>{user?.chair_id || "Not Assigned"}</span></p> */}
         </div>
         <button className="logout-button" onClick={handleLogout}>Logout</button>
       </div>

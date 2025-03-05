@@ -5,11 +5,14 @@ const Data = require('./models/data');
 const User = require('./models/User');
 require('dotenv').config();
 const cors = require('cors');
+const Chair = require('./models/chairs')
 
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+
+const auth = require("./middleware/authMiddleware");
 
 app.use(express.json());  
 app.use(express.urlencoded({ extended: true }));
@@ -54,6 +57,57 @@ app.post('/data', async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
+
+
+app.post("/data/:chair_id", async (req, res) => {
+  console.log("Received Data for Chair ID:", req.params.chair_id, "with Body:", req.body);
+
+  try {
+      const { chair_id } = req.params;
+
+      // Check if the chair exists
+      const chairExists = await Chair.findOne({ chair_id });
+      if (!chairExists) {
+          return res.status(404).json({ message: "Chair not found" });
+      }
+
+      // Create and Save Data
+      const newData = new Data({
+          chair_id,  // Assign chair_id from URL parameter
+          ...req.body  // Spread the request body into the new object
+      });
+
+      const savedData = await newData.save(); // Save to MongoDB
+      console.log("Data Saved:", savedData);
+
+      res.status(201).json(savedData);  // Respond with the saved data
+  } catch (err) {
+      console.error("Error Saving Data:", err);
+      res.status(500).json({ message: "Server error while saving data" });
+  }
+});
+
+
+app.get("/data/:chair_id", async (req, res) => {
+  try {
+      const { chair_id } = req.params;
+
+      // Check if the chair exists
+      const chairExists = await Chair.findOne({ chair_id });
+      if (!chairExists) {
+          return res.status(404).json({ message: "Chair not found" });
+      }
+
+      // Fetch all data for the given chair_id
+      const chairData = await Data.find({ chair_id });
+
+      res.status(200).json({ data: chairData });
+  } catch (error) {
+      console.error("Error Fetching Data:", error);
+      res.status(500).json({ message: "Server error while fetching data" });
+  }
+});
+
 
 // Put Method for updating data and storing the previous data in history 
 app.put('/data/:chair_id', async (req, res) => {
@@ -101,40 +155,6 @@ app.put('/data/:chair_id', async (req, res) => {
 });
 
 
-
-// app.post('/data', async (req, res) => {
-//   console.log("Received Data:", req.body);  
-
-//   try {
-//     const { sittingDuration, fsr1, fsr2, fsr3, fsr4, totalsittingduration, relaxation_time, sitting_threhold, continous_vibration, measureweight } = req.body;
-    
-//     if (!sittingDuration || !fsr1 || !fsr2 || !fsr3 || !fsr4 || !totalsittingduration || !relaxation_time || !sitting_threhold || continous_vibration === undefined || measureweight === undefined) {
-//       return res.status(400).json({ message: 'All fields are required' });
-//     }
-
-//     const newData = new Data({
-//       sittingDuration,
-//       fsr1,
-//       fsr2,
-//       fsr3,
-//       fsr4,
-//       totalsittingduration,
-//       relaxation_time,
-//       sitting_threhold,
-//       continous_vibration,
-//       measureweight
-//     });
-
-//     await newData.save();
-//     res.status(201).json(newData);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(400).json({ message: err.message });
-//   }
-// });
-
-
-
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -161,16 +181,27 @@ app.get('/data', async (req, res) => {
 
 app.get("/user", async (req, res) => {
   try {
-    const users = await User.find(); 
-    res.json(users);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: "Server error" });
+      // console.log("Request User Object:", req.user); // Debugging log
+
+      // if (!req.user) {
+      //     return res.status(401).json({ msg: "Unauthorized, no user token" });
+      // }
+
+      const user = await User.findById(req.user.id).select("-password");
+      if (!user) return res.status(404).json({ msg: "User not found" });
+
+      console.log("User Data Sent:", user); // Debugging log
+      res.json(user);
+  } catch (err) {
+      console.error("Server Error:", err.message);
+      res.status(500).send("Server Error");
   }
 });
 
 
-// app.get('/data/:chair_id', async (req, res) => {
+
+
+
 //   console.log("Received Request for Chair ID:", req.params.chair_id);  
 
 //   try {
@@ -188,42 +219,6 @@ app.get("/user", async (req, res) => {
 // });
 
 
-app.get('/data/:chair_id', async (req, res) => {
-  try {
-      const data = await Data.find({ chair_id: req.params.chair_id });
-
-      if (!data || data.length === 0) {
-          return res.status(404).json({ message: "No sensor data found" });
-      }
-
-      res.json(data);
-  } catch (err) {
-      console.error("Error Fetching Data:", err);
-      res.status(500).json({ message: "Server error" });
-  }
-});
-
-
-
-app.post('/data/:chair_id', async (req, res) => {
-  console.log("Received Data for Chair ID:", req.params.chair_id, "with Body:", req.body);
-
-  try {
-      const newData = new Data({
-          chair_id: req.params.chair_id,  // Assign chair_id from URL parameter
-          ...req.body  // Spread the rest of the request body into the new object
-      });
-
-      const savedData = await newData.save(); // Save to MongoDB
-
-      console.log("Data Saved:", savedData);
-
-      res.status(201).json(savedData);  // Respond with the saved data
-  } catch (err) {
-      console.error("Error Saving Data:", err);
-      res.status(500).json({ message: "Server error while saving data" });
-  }
-});
 
 
 
