@@ -21,8 +21,18 @@ export default function Login() {
 
       if (response.data.user_id) {
         localStorage.setItem("user_id", response.data.user_id);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("isChairRegistered", response.data.isChairRegistered ? "true" : "false");
+ // Store chair status
+
         alert("Login successful!");
-        navigate("/chair-registration");
+
+        // Redirect based on chair registration status
+        if (response.data.isChairRegistered) {
+          navigate("/dashboard"); // Go to dashboard if chair is registered
+        } else {
+          navigate("/chair-registration"); // Go to chair registration if not registered
+        }
       } else {
         alert("Login failed, user_id missing!");
       }
@@ -34,29 +44,28 @@ export default function Login() {
 
   return (
     <div style={styles.container}>
-       <div style={styles.containers}>
-       <form onSubmit={handleSubmit} style={styles.form}>
-        <h2 style={styles.heading}>Login</h2>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          required
-          style={styles.input}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-          required
-          style={styles.input}
-        />
-        <button type="submit" style={styles.button}>Login</button>
-      </form>
-       </div>
-    
+      <div style={styles.containers}>
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <h2 style={styles.heading}>Login</h2>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            onChange={handleChange}
+            required
+            style={styles.input}
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            onChange={handleChange}
+            required
+            style={styles.input}
+          />
+          <button type="submit" style={styles.button}>Login</button>
+        </form>
+      </div>
     </div>
   );
 }
@@ -69,7 +78,7 @@ const styles = {
     minHeight: "100vh",
     background: "linear-gradient(to bottom right, #4f46e5, #9333ea)",
   },
-  containers : {
+  containers: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -86,9 +95,6 @@ const styles = {
     flexDirection: "column",
     width: "100%",
   },
-
-
-
   heading: {
     fontSize: "24px",
     fontWeight: "bold",

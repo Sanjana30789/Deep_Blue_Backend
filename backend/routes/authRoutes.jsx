@@ -100,36 +100,75 @@ router.post('/signup', async (req, res) => {
 });
 
 
+// router.post("/login", async (req, res) => {
+//   const { email, password } = req.body;
+
+//   try {
+//       const user = await User.findOne({ email });
+
+//       if (!user) {
+//           return res.status(400).json({ msg: "User not found" });
+//       }
+
+//       // Check password
+//       const isMatch = await bcrypt.compare(password, user.password);
+//       if (!isMatch) {
+//           return res.status(400).json({ msg: "Invalid credentials" });
+//       }
+
+//       // Generate JWT token (optional)
+//       const token = jwt.sign({ user_id: user._id }, "your_secret_key", { expiresIn: "1h" });
+
+//       // Send response with user_id
+//       res.status(200).json({ 
+//           msg: "Login successful", 
+//           user_id: user._id, 
+//           token 
+//       });
+
+//   } catch (err) {
+//       console.error("Error logging in:", err);
+//       res.status(500).json({ msg: "Server error" });
+//   }
+// });
+
+
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
+    const { email, password } = req.body;
+  
+    try {
       const user = await User.findOne({ email });
-
+  
       if (!user) {
-          return res.status(400).json({ msg: "User not found" });
+        return res.status(400).json({ msg: "User not found" });
       }
-
+  
       // Check password
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-          return res.status(400).json({ msg: "Invalid credentials" });
+        return res.status(400).json({ msg: "Invalid credentials" });
       }
-
-      // Generate JWT token (optional)
+  
+      // Check if chair is registered (Assuming there is a field 'isChairRegistered' in the user schema)
+      const isChairRegistered = user.isChairRegistered || false;
+  
+      // Generate JWT token
       const token = jwt.sign({ user_id: user._id }, "your_secret_key", { expiresIn: "1h" });
-
-      // Send response with user_id
-      res.status(200).json({ 
-          msg: "Login successful", 
-          user_id: user._id, 
-          token 
+  
+      // Send response with user_id and chair registration status
+      res.status(200).json({
+        msg: "Login successful",
+        user_id: user._id,
+        token,
+        isChairRegistered,  // Include chair registration status
       });
-
-  } catch (err) {
+  
+    } catch (err) {
       console.error("Error logging in:", err);
       res.status(500).json({ msg: "Server error" });
-  }
-});
+    }
+  });
+  
+
 
 module.exports = router;

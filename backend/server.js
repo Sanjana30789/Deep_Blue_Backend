@@ -32,7 +32,7 @@ app.post('/data', async (req, res) => {
   try {
     const {
       sittingDuration, fsr1, fsr2, fsr3, fsr4, totalsittingduration,
-      relaxation_time, sitting_threhold, continous_vibration, measureweight
+      relaxation_time, sitting_threhold, continous_vibration, measureweight,weight
     } = req.body;
 
     // console.log("Extracted Values - Chair ID:", chair_id);
@@ -45,7 +45,8 @@ app.post('/data', async (req, res) => {
       sitting_threhold,
       // chair_id: String(chair_id), 
       continous_vibration: Boolean(continous_vibration),
-      measureweight: Boolean(measureweight)
+      measureweight: Boolean(measureweight),
+      weight
     });
 
     console.log("Final Object Before Saving:", newData);
@@ -166,46 +167,22 @@ app.get('/data', async (req, res) => {
 });
 
 
-app.get("/user", async (req, res) => {
-  try {
-      // console.log("Request User Object:", req.user); // Debugging log
-
-      // if (!req.user) {
-      //     return res.status(401).json({ msg: "Unauthorized, no user token" });
-      // }
-
-      const user = await User.findById(req.user.id).select("-password");
-      if (!user) return res.status(404).json({ msg: "User not found" });
-
-      console.log("User Data Sent:", user); // Debugging log
-      res.json(user);
-  } catch (err) {
-      console.error("Server Error:", err.message);
-      res.status(500).send("Server Error");
-  }
-});
-
-
-
-
-
-//   console.log("Received Request for Chair ID:", req.params.chair_id);  
-
+// router.get("/user", async (req, res) => {
 //   try {
-//       const data = await Data.findOne({ chair_id: req.params.chair_id }); 
-//       console.log("MongoDB Response:", data);  
+//       const token = req.headers.authorization?.split(" ")[1]; // Extract token
+//       if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-//       if (!data) {
-//           return res.status(404).json({ message: "Data not found" });
-//       }
-//       res.json(data);  
-//   } catch (err) {
-//       console.error("Error Fetching Data:", err);
-//       res.status(400).json({ message: err.message});
+//       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//       const user = await User.findById(decoded.userId).select("-password"); // Exclude password
+
+//       if (!user) return res.status(404).json({ message: "User not found" });
+
+//       res.json(user); // ✅ Send user data including chair_id
+//   } catch (error) {
+//       console.error("Error fetching user:", error);
+//       res.status(500).json({ message: "Server error" });
 //   }
 // });
-
-
 
 
 

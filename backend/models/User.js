@@ -4,7 +4,8 @@ const UserSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    chair_id: { type: String, unique: true }
+    chair_id: { type: String, unique: true },
+    isChairRegistered: { type: Boolean, default: false } 
        
 }
 )

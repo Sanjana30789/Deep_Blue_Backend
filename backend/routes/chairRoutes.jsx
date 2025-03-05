@@ -24,8 +24,50 @@ const User = require("../models/User");
 //   });
 
 
+// router.post('/register-chair', async (req, res) => {
+//     const { chair_id, user_id ,relaxation_time, sitting_threshold, continuous_vibration} = req.body;
+
+//     // Check if required fields are present
+//     if (!chair_id || !user_id) {
+//         return res.status(400).json({ msg: "Chair ID and User ID are required" });
+//     }
+
+//     try {
+//         console.log("Incoming Request Body:", req.body);
+
+//         // Check if the chair already exists
+//         const existingChair = await Chair.findOne({ chair_id });
+//         if (existingChair) {
+//             console.log("Chair already registered:", existingChair);
+//             return res.status(400).json({ msg: "Chair already registered" });
+//         }
+
+//         // Check if the user exists before linking the chair
+//         const userExists = await User.findById(user_id);
+//         if (!userExists) {
+//             console.log("User not found for ID:", user_id);
+//             return res.status(404).json({ msg: "User not found" });
+//         }
+
+//         // Create and save new chair
+//         const newChair = new Chair({ chair_id, user_id, relaxation_time, sitting_threshold, continuous_vibration  });
+//         await newChair.save();
+//         console.log("New Chair Registered:", newChair);
+
+//         // Link the chair to the user
+//         const updatedUser = await User.findByIdAndUpdate(user_id, { chair_id }, { new: true });
+//         console.log("Updated User:", updatedUser);
+
+//         res.status(201).json({ msg: "Chair registered successfully", chair: newChair });
+
+//     } catch (err) {
+//         console.error("Error registering chair:", err);
+//         res.status(500).json({ msg: "Server error", error: err.message });
+//     }
+// });
+
 router.post('/register-chair', async (req, res) => {
-    const { chair_id, user_id ,relaxation_time, sitting_threshold, continuous_vibration} = req.body;
+    const { chair_id, user_id, relaxation_time, sitting_threshold, continuous_vibration } = req.body;
 
     // Check if required fields are present
     if (!chair_id || !user_id) {
@@ -33,38 +75,55 @@ router.post('/register-chair', async (req, res) => {
     }
 
     try {
-        console.log("Incoming Request Body:", req.body);
+        console.log("🔹 Incoming Request Body:", req.body);
 
-        // Check if the chair already exists
+        // Check if the chair is already registered
         const existingChair = await Chair.findOne({ chair_id });
         if (existingChair) {
-            console.log("Chair already registered:", existingChair);
+            console.log("⚠️ Chair already registered:", existingChair);
             return res.status(400).json({ msg: "Chair already registered" });
         }
 
-        // Check if the user exists before linking the chair
+        // Check if the user exists
         const userExists = await User.findById(user_id);
         if (!userExists) {
-            console.log("User not found for ID:", user_id);
+            console.log("❌ User not found for ID:", user_id);
             return res.status(404).json({ msg: "User not found" });
         }
 
-        // Create and save new chair
-        const newChair = new Chair({ chair_id, user_id, relaxation_time, sitting_threshold, continuous_vibration  });
+        // Create and save new chair entry
+        const newChair = new Chair({
+            chair_id,
+            user_id,
+            relaxation_time,
+            sitting_threshold,
+            continuous_vibration
+        });
+
         await newChair.save();
-        console.log("New Chair Registered:", newChair);
+        console.log("✅ New Chair Registered:", newChair);
 
-        // Link the chair to the user
-        const updatedUser = await User.findByIdAndUpdate(user_id, { chair_id }, { new: true });
-        console.log("Updated User:", updatedUser);
+        // Update the user document to reflect chair registration
+        const updatedUser = await User.findByIdAndUpdate(
+            user_id,
+            { chair_id, isChairRegistered: true }, // Adding `isChairRegistered`
+            { new: true } // Returns the updated user document
+        );
 
-        res.status(201).json({ msg: "Chair registered successfully", chair: newChair });
+        console.log("🔄 Updated User Data:", updatedUser);
+
+        res.status(201).json({
+            msg: "Chair registered successfully",
+            chair: newChair,
+            user: updatedUser
+        });
 
     } catch (err) {
-        console.error("Error registering chair:", err);
+        console.error("🚨 Error registering chair:", err);
         res.status(500).json({ msg: "Server error", error: err.message });
     }
 });
+
 
 
 
