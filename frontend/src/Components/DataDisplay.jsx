@@ -34,7 +34,7 @@ export default function Dashboard() {
 
     const fetchSensorData = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/data/${chair_id}`);
+            const response = await fetch(`https://deep-blue-backend-2.onrender.com/data/BHAVNA`);
             const data = await response.json();
             const today = new Date().toLocaleDateString();
             const todayReadings = data.filter(reading => new Date(reading.timestamp).toLocaleDateString() === today);

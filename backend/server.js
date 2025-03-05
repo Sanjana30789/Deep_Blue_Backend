@@ -110,47 +110,34 @@ app.get("/data/:chair_id", async (req, res) => {
 
 
 // Put Method for updating data and storing the previous data in history 
-app.put('/data/:chair_id', async (req, res) => {
+app.put("/data/:chair_id", async (req, res) => {
+  console.log("Updating Data for Chair ID:", req.params.chair_id, "with Body:", req.body);
+
   try {
-      const existingData = await Data.findOne({ chair_id: req.params.chair_id });
-      if (!existingData) {
-          return res.status(404).json({ message: "Data not found" });
+      const { chair_id } = req.params;
+
+      // Check if the chair exists
+      const chairExists = await Chair.findOne({ chair_id });
+      if (!chairExists) {
+          return res.status(404).json({ message: "Chair not found" });
       }
 
-     //push old data to history array
-      existingData.history.push({
-          sittingDuration: existingData.sittingDuration,
-          fsr1: existingData.fsr1,
-          fsr2: existingData.fsr2,
-          fsr3: existingData.fsr3,
-          fsr4: existingData.fsr4,
-          totalsittingduration: existingData.totalsittingduration,
-          relaxation_time: existingData.relaxation_time,
-          sitting_threshold: existingData.sitting_threshold,
-          continous_vibration: existingData.continous_vibration,
-          measureweight: existingData.measureweight,
-          timestamp: existingData.timestamp
-      });
+      // Update the data
+      const updatedData = await Data.findOneAndUpdate(
+          { chair_id },  // Find data by chair_id
+          { $set: req.body },  // Update with new data
+          { new: true, runValidators: true } // Return updated document
+      );
 
-      // new data updated
-      existingData.sittingDuration = req.body.sittingDuration;
-      existingData.fsr1 = req.body.fsr1;
-      existingData.fsr2 = req.body.fsr2;
-      existingData.fsr3 = req.body.fsr3;
-      existingData.fsr4 = req.body.fsr4;
-      existingData.totalsittingduration = req.body.totalsittingduration;
-      existingData.relaxation_time = req.body.relaxation_time;
-      existingData.sitting_threshold = req.body.sitting_threshold;
-      existingData.continous_vibration = req.body.continous_vibration;
-      existingData.measureweight = req.body.measureweight;
-      existingData.timestamp = new Date();
+      if (!updatedData) {
+          return res.status(404).json({ message: "No data found to update" });
+      }
 
-      
-      await existingData.save();
-      res.json({ message: "Data updated successfully", updatedData: existingData });
-
+      console.log("Data Updated:", updatedData);
+      res.status(200).json(updatedData);
   } catch (err) {
-      res.status(500).json({ message: err.message });
+      console.error("Error Updating Data:", err);
+      res.status(500).json({ message: "Server error while updating data" });
   }
 });
 
