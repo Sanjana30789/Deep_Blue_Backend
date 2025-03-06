@@ -1,0 +1,17 @@
+.sidebar-button {
+    background-color: #80deea;
+    color: #004d40;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1.1rem;
+    margin: 5px 0; /* Add vertical spacing */
+}
+
+.sidebar-button:hover {
+    background-color: #4db6ac;
+    color: white;
+    transform: scale(1.05); /* Slightly enlarge on hover */
+} 
