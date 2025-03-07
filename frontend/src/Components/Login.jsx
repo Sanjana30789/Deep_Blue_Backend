@@ -7,7 +7,9 @@ export default function Login() {
     email: "",
     password: "",
   });
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [profilePic, setProfilePic] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -16,29 +18,36 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", loginDetails);
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        loginDetails
+      );
 
       if (response.data.user_id) {
         localStorage.setItem("user_id", response.data.user_id);
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("isChairRegistered", response.data.isChairRegistered ? "true" : "false");
- // Store chair status
+        localStorage.setItem("profilePic", response.data.profilePic || "default.jpg");
+        localStorage.setItem("isChairRegistered", response.data.isChairRegistered);
 
         alert("Login successful!");
 
         // Redirect based on chair registration status
         if (response.data.isChairRegistered) {
-          navigate("/dashboard"); // Go to dashboard if chair is registered
+          navigate("/dashboard"); // Redirect to dashboard if registered
         } else {
-          navigate("/chair-registration"); // Go to chair registration if not registered
+          navigate("/chair-registration"); // Redirect to chair registration page if not registered
         }
       } else {
-        alert("Login failed, user_id missing!");
+        setError("Login failed, user_id missing!");
       }
     } catch (err) {
-      console.error("Login Error:", err.response?.data || err.message);
-      alert(err.response?.data?.msg || "Login failed");
+      setError(err.response?.data?.msg || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,6 +56,10 @@ export default function Login() {
       <div style={styles.containers}>
         <form onSubmit={handleSubmit} style={styles.form}>
           <h2 style={styles.heading}>Login</h2>
+          {error && <p style={styles.error}>{error}</p>}
+          {profilePic && (
+            <img src={profilePic} alt="Profile" style={styles.profilePic} />
+          )}
           <input
             type="email"
             name="email"
@@ -63,7 +76,9 @@ export default function Login() {
             required
             style={styles.input}
           />
-          <button type="submit" style={styles.button}>Login</button>
+          <button type="submit" style={styles.button} disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
         </form>
       </div>
     </div>
@@ -89,6 +104,7 @@ const styles = {
     borderRadius: "15px",
     boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
     textAlign: "center",
+    flexDirection: "column",
   },
   form: {
     display: "flex",
@@ -120,5 +136,16 @@ const styles = {
     fontSize: "16px",
     cursor: "pointer",
     transition: "all 0.3s ease",
+  },
+  error: {
+    color: "red",
+    fontSize: "14px",
+    marginBottom: "10px",
+  },
+  profilePic: {
+    width: "80px",
+    height: "80px",
+    borderRadius: "50%",
+    marginBottom: "15px",
   },
 };

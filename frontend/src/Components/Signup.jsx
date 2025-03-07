@@ -9,16 +9,44 @@ export default function Signup() {
     password: "",
   });
 
+  const [profilePic, setProfilePic] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePic(file);
+      setPreview(URL.createObjectURL(file)); // Show preview before upload
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
+    const formData = new FormData();
+    formData.append("name", userDetails.name);
+    formData.append("email", userDetails.email);
+    formData.append("password", userDetails.password);
+    if (profilePic) {
+      formData.append("profilePic", profilePic);
+    }
+
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/signup", userDetails);
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/signup",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
       if (response.data.user_id) {
         alert("Signup successful! Please login.");
         navigate("/login");
@@ -28,6 +56,8 @@ export default function Signup() {
     } catch (err) {
       console.error("Signup Error:", err.response?.data || err.message);
       alert(err.response?.data?.msg || "Signup failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,9 +90,24 @@ export default function Signup() {
             required
             style={styles.input}
           />
-          <button type="submit" style={styles.button}>Sign Up</button>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            style={styles.input}
+          />
+          {preview && (
+            <img
+              src={preview}
+              alt="Profile Preview"
+              style={styles.previewImage}
+            />
+          )}
+          <button type="submit" style={styles.button} disabled={loading}>
+            {loading ? "Signing Up..." : "Sign Up"}
+          </button>
           <p style={styles.loginText}>
-            Already have an account? 
+            Already have an account?{" "}
             <span style={styles.loginLink} onClick={() => navigate("/login")}>
               Login
             </span>
@@ -124,9 +169,6 @@ const styles = {
     cursor: "pointer",
     transition: "all 0.3s ease",
   },
-  buttonHover: {
-    backgroundColor: "#7c2ae8",
-  },
   loginText: {
     marginTop: "10px",
     color: "#555",
@@ -136,5 +178,12 @@ const styles = {
     color: "#9333ea",
     cursor: "pointer",
     textDecoration: "underline",
+  },
+  previewImage: {
+    width: "80px",
+    height: "80px",
+    borderRadius: "50%",
+    objectFit: "cover",
+    marginBottom: "10px",
   },
 };

@@ -1,19 +1,59 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import './AboutUs.css';
+
+const teamMembers = [
+    { name: 'Sanjana Choubey', role: 'Project Lead & Developer' },
+    { name: 'Sanjeev Desai', role: 'Hardware & IoT Specialist' },
+    { name: 'Sanika Jadhav', role: 'Data Analyst & Researcher' },
+    { name: 'Ashish Maurya', role: 'UX/UI Designer' }
+];
 
 const AboutUs = () => {
     return (
         <div className='about-us'>
-            <h1>About Us</h1>
-            <p>Welcome to our project! We are dedicated to providing the best solutions for our users.</p>
-            <h2>Project Overview</h2>
-            <p>This project aims to revolutionize the way users interact with technology, making it more accessible and user-friendly.</p>
-            <h2>Meet Our Leader</h2>
-            <p><strong>Sanajan</strong> is the visionary behind this project, leading our team with passion and expertise.</p>
-            <p>With a background in software development and a keen eye for design, Sanajan ensures that our project meets the highest standards.</p>
-            <img src='path_to_image.jpg' alt='Sanajan' className='leader-image' />
+            <motion.h1 
+                initial={{ opacity: 0, y: -20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ duration: 0.8 }}
+            >
+                About Us
+            </motion.h1>
+            
+            <motion.p 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ duration: 1 }}
+            >
+                We are a passionate team working on an IoT-enabled smart chair to tackle sedentary behavior.
+                Our innovative solution monitors posture, sitting time, and provides real-time alerts
+                to promote a healthier lifestyle.
+            </motion.p>
+            
+            <motion.h2 
+                initial={{ opacity: 0, y: -20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ duration: 0.8, delay: 0.2 }}
+            >
+                Meet Our Team
+            </motion.h2>
+            
+            <div className='team-container'>
+                {teamMembers.map((member, index) => (
+                    <motion.div 
+                        key={index} 
+                        className='team-member' 
+                        initial={{ opacity: 0, scale: 0.8 }} 
+                        animate={{ opacity: 1, scale: 1 }} 
+                        transition={{ duration: 0.5, delay: index * 0.2 }}
+                    >
+                        <h3>{member.name}</h3>
+                        <p>{member.role}</p>
+                    </motion.div>
+                ))}
+            </div>
         </div>
     );
 };
 
-export default AboutUs; 
+export default AboutUs;

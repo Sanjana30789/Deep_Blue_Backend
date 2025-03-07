@@ -11,6 +11,7 @@ import AIRecommendation from './Components/AI'
 import ChairRegistration from './Components/chairRegister'
 import UserProfile from './Components/UserProfile';
 import AboutUs from './Components/AboutUs';
+import uploadProfilePicture from './Components/profileupload'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/ai" element={<AIRecommendation />} />
         <Route path="/chair-registration" element={<ChairRegistration />} />
         <Route path="/about" element={<AboutUs />} />
+        <Route path="/image" element={<uploadProfilePicture />} />
       </Routes>
     </Router>
   );

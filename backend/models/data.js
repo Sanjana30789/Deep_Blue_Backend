@@ -11,7 +11,7 @@ const dataSchema = new mongoose.Schema({
   totalsittingduration : {type :Number,required : true},
   timestamp: { type: Date, default: Date.now }, 
   measureweight : {type:Boolean ,required:true},
-  weight : {type:Number,required:true},
+  weight : {type:Number},
 
 
 

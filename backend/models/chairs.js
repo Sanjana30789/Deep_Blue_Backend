@@ -6,7 +6,8 @@ const chairSchema = new mongoose.Schema({
   relaxation_time: { type: Number, default: 0 }, // Default value 0 if not provided
   sitting_threshold: { type: Number, default: 30 }, // Default threshold (adjust as needed)
   continuous_vibration: { type: Boolean, default: false }, // Default to false
-}, { timestamps: true }); // Adds createdAt & updatedAt fields automatically
+}, { timestamps: true });
+  // Adds createdAt & updatedAt fields automatically
 
 const Chair = mongoose.model('Chair', chairSchema);
 
