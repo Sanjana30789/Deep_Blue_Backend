@@ -15,17 +15,36 @@ const WeightHistogram = ({ chairId }) => {
                 const { data } = response.data;
 
                 // Extract historical weight data
-                const dates = data.flatMap(item => item.history.map(h => h.date));
-                const weights = data.flatMap(item => item.history.map(h => h.weight));
+                let weightHistory = [];
+                
+                data.forEach(item => {
+                    item.history.forEach(h => {
+                        weightHistory.push({
+                            date: new Date(h.date), // Convert to Date object for sorting
+                            formattedDate: new Date(h.date).toLocaleDateString(),
+                            weight: h.weight
+                        });
+                    });
+                });
+
+                // Sort in descending order (latest date first)
+                weightHistory.sort((a, b) => b.date - a.date);
+
+                // Extract sorted labels and weights
+                const sortedDates = weightHistory.map(item => item.formattedDate);
+                const sortedWeights = weightHistory.map(item => item.weight);
 
                 setChartData({
-                    labels: dates.map(date => new Date(date).toLocaleDateString()),
+                    labels: sortedDates,
                     datasets: [{
-                        label: "Weight (kg)",
-                        data: weights,
+                        label: "Average Weight (kg)",
+                        data: sortedWeights,
                         backgroundColor: "rgba(75, 192, 192, 0.6)",
                         borderColor: "rgba(75, 192, 192, 1)",
                         borderWidth: 1,
+                        barThickness: 50, // Fixed bar thickness to remove gaps
+                        categoryPercentage: 1.0, // Removes spacing between bars
+                        barPercentage: 1.0, // Makes bars full width
                     }]
                 });
             } catch (error) {
@@ -39,7 +58,25 @@ const WeightHistogram = ({ chairId }) => {
     return (
         <div>
             <h2>Weight vs Days Histogram</h2>
-            {chartData ? <Bar data={chartData} options={{ responsive: true }} /> : <p>Loading chart...</p>}
+            {chartData ? (
+                <Bar
+                    data={chartData}
+                    options={{
+                        responsive: true,
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: { autoSkip: false } // Ensures no missing labels
+                            },
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }}
+                />
+            ) : (
+                <p>Loading chart...</p>
+            )}
         </div>
     );
 };

@@ -4,7 +4,7 @@ const UserSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    chair_id: { type: String, unique: true },
+    chair_id: { type: mongoose.Schema.Types.String, ref: "Chair" },
     isChairRegistered: { type: Boolean, default: false },
     profilePic: { type: String, default: "" } 
 }

@@ -1,106 +1,151 @@
-import React, { useState, useEffect } from "react";
+// import React, { useEffect, useState } from "react";
+// import { Pie } from "react-chartjs-2";
+// import axios from "axios";
+// import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
+// ChartJS.register(ArcElement, Tooltip, Legend);
+
+// const PosturePieChart = ({ chairId }) => {
+//     const [fsrData, setFsrData] = useState(null);
+//     const [postureStatus, setPostureStatus] = useState("");
+
+//     useEffect(() => {
+//         const fetchData = async () => {
+//             try {
+//                 const response = await axios.get(`http://localhost:5000/data/ALPHA`);
+//                 const { fsr1, fsr2, fsr3, fsr4 } = response.data; // Assuming your API returns these values
+
+//                 // FSR readings in an array
+//                 const fsrValues = [fsr1, fsr2, fsr3, fsr4];
+
+//                 // Posture determination logic
+//                 let status = "Good Posture";
+//                 if (fsr1 + fsr2 > fsr3 + fsr4) {
+//                     status = "Leaning Forward";
+//                 } else if (fsr3 + fsr4 > fsr1 + fsr2) {
+//                     status = "Leaning Backward";
+//                 } else if (fsr1 + fsr3 > fsr2 + fsr4) {
+//                     status = "Leaning Left";
+//                 } else if (fsr2 + fsr4 > fsr1 + fsr3) {
+//                     status = "Leaning Right";
+//                 }
+
+//                 setPostureStatus(status);
+
+//                 // Set chart data
+//                 setFsrData({
+//                     labels: ["FSR1 (Front-Left)", "FSR2 (Front-Right)", "FSR3 (Back-Left)", "FSR4 (Back-Right)"],
+//                     datasets: [
+//                         {
+//                             label: "FSR Pressure Distribution",
+//                             data: fsrValues,
+//                             backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+//                             hoverOffset: 10,
+//                         }
+//                     ]
+//                 });
+//             } catch (error) {
+//                 console.error("Error fetching FSR data:", error);
+//             }
+//         };
+
+//         fetchData();
+//     }, [chairId]);
+
+//     return (
+//         <div>
+//             <h2>FSR Pressure Distribution</h2>
+//             {fsrData ? (
+//                 <>
+//                     <Pie data={fsrData} />
+//                     <h3>Posture Status: {postureStatus}</h3>
+//                 </>
+//             ) : (
+//                 <p>Loading chart...</p>
+//             )}
+//         </div>
+//     );
+// };
+
+// export default PosturePieChart;
+
+
+import React, { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default function PieChartPage() {
-  const [pieDataByDate, setPieDataByDate] = useState({});
-  const [recommendations, setRecommendations] = useState({});
+const PosturePieChart = () => {
+  const [fsrValues, setFsrValues] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchPieData = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/data");
-        const data = await response.json();
+  // Fetch FSR values from API
+  const fetchFSRValues = async () => {
+    try {
+      const response = await fetch(
+        "https://deep-blue-backend-1-tiy7.onrender.com/data/ALPHA"
+      );
+      const data = await response.json();
 
-        // Group data by date
-        const groupedData = {};
-        data.forEach((item) => {
-          const date = new Date(item.timestamp).toLocaleDateString();
-
-          if (!groupedData[date]) {
-            groupedData[date] = { sittingDuration: [], fsrReading: [] };
-          }
-
-          groupedData[date].sittingDuration.push(item.sittingDuration);
-          groupedData[date].fsrReading.push(item.fsrReading);
+      if (Array.isArray(data) && data.length > 0) {
+        const latestData = data[0];
+        setFsrValues({
+          fsr1: parseFloat(latestData.fsr1) || 0,
+          fsr2: parseFloat(latestData.fsr2) || 0,
+          fsr3: parseFloat(latestData.fsr3) || 0,
+          fsr4: parseFloat(latestData.fsr4) || 0,
         });
-
-        const pieDataObj = {};
-        const dailyRecommendations = {};
-
-        Object.keys(groupedData).forEach((date) => {
-          const totalSitting = groupedData[date].sittingDuration.reduce((a, b) => a + b, 0);
-          const totalFSR = groupedData[date].fsrReading.reduce((a, b) => a + b, 0);
-          const avgSitting = totalSitting / groupedData[date].sittingDuration.length;
-          const avgFSR = totalFSR / groupedData[date].fsrReading.length;
-
-          pieDataObj[date] = {
-            labels: ["Sitting Duration", "FSR Reading"],
-            datasets: [
-              {
-                data: [totalSitting, totalFSR],
-                backgroundColor: ["rgba(75, 192, 192, 0.7)", "rgba(255, 99, 132, 0.7)"],
-                borderColor: ["rgba(75, 192, 192, 1)", "rgba(255, 99, 132, 1)"],
-                borderWidth: 1,
-              },
-            ],
-          };
-
-          // Generate Recommendations
-          let advice = "✅ Keep up the good work!";
-          if (avgSitting > 180) {
-            advice = "⚠️ You've been sitting for too long today. Take regular breaks!";
-          } else if (avgFSR < 50) {
-            advice = "⚠️ Your posture seems incorrect. Adjust your sitting position!";
-          } else if (avgSitting > 120 && avgFSR < 70) {
-            advice = "⚠️ Long sitting hours and poor posture detected. Take breaks and sit properly.";
-          }
-
-          dailyRecommendations[date] = advice;
-        });
-
-        setPieDataByDate(pieDataObj);
-        setRecommendations(dailyRecommendations);
-      } catch (error) {
-        console.error("Error fetching pie chart data:", error);
+        setLoading(false);
+      } else {
+        console.error("FSR values not found in API response:", data);
+        setLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching FSR data:", error);
+      setLoading(false);
+    }
+  };
 
-    fetchPieData();
-    const interval = setInterval(fetchPieData, 5000); // Refresh every 5 seconds
-
-    return () => clearInterval(interval);
+  // Fetch data on mount and every 5 seconds (for real-time updates)
+  useEffect(() => {
+    fetchFSRValues();
+    const interval = setInterval(fetchFSRValues, 5000); // Auto-update every 5 seconds
+    return () => clearInterval(interval); // Cleanup interval
   }, []);
 
+  // Data for Pie Chart
+  const pieData = fsrValues
+    ? {
+        labels: ["FSR1 (Front-Left)", "FSR2 (Front-Right)", "FSR3 (Back-Left)", "FSR4 (Back-Right)"],
+        datasets: [
+          {
+            label: "FSR Pressure",
+            data: [fsrValues.fsr1, fsrValues.fsr2, fsrValues.fsr3, fsrValues.fsr4],
+            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+            hoverOffset: 10,
+          }
+        ],
+      }
+    : null;
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+  };
+
   return (
-    <div style={{ width: "90%", margin: "50px auto", textAlign: "center" }}>
-      <h2>📊 Date-wise Pie Charts</h2>
-      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "20px" }}>
-        {Object.keys(pieDataByDate).map((date) => (
-          <div
-            key={date}
-            style={{
-              flex: "1 1 calc(20% - 20px)", // Ensures 3 per row
-              minWidth: "250px", // Prevents shrinking too much
-              maxWidth: "350px",
-              textAlign: "center",
-              padding: "20px",
-              border: "1px solid #ddd",
-              borderRadius: "10px",
-              backgroundColor: "#f9f9f9",
-            }}
-          >
-            <h3 style={{ color: "#333" }}>📅 {date}</h3>
-            <Pie data={pieDataByDate[date]} />
-            <div style={{ marginTop: "20px", padding: "10px", backgroundColor: "#fff3cd", borderRadius: "8px" }}>
-              <h4>📢 Recommendation:</h4>
-              <p style={{ fontSize: "16px", fontWeight: "bold", color: "#856404" }}>{recommendations[date]}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+    <div style={{ width: "400px", height: "400px" }}>
+      <h2>FSR Pressure Distribution</h2>
+      {loading ? (
+        <p>Loading FSR Data...</p>
+      ) : fsrValues && pieData ? (
+        <Pie data={pieData} options={options} />
+      ) : (
+        <p>No FSR data available.</p>
+      )}
     </div>
   );
-}
+};
+
+export default PosturePieChart;

@@ -235,33 +235,110 @@ export default function ChairRegistration() {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setChairDetails({ ...chairDetails, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setChairDetails({
+      ...chairDetails,
+      [name]: name === "relaxation_time" || name === "sitting_threshold" ? Number(value) : value
+    });
   };
+  
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   const user_id = localStorage.getItem("user_id"); // Get logged-in user's ID
+
+  //   if (!user_id) {
+  //     alert("User not logged in. Please log in first.");
+  //     navigate("/login");
+  //     return;
+  //   }
+
+  //   try {
+  //     const chairData = { ...chairDetails, user_id }; // Link chair to user
+
+  //     await axios.post("http://localhost:5000/api/chair/register-chair", chairData);
+
+  //     alert("Chair registered successfully!");
+  //     navigate("/dashboard"); // Redirect to Dashboard
+  //   } catch (err) {
+  //     console.error(err.response?.data?.msg || "Chair registration failed");
+  //     alert(err.response?.data?.msg || "Chair registration failed");
+  //   }
+  // };
+
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  
+  //   const user_id = localStorage.getItem("user_id");
+  
+  //   if (!user_id) {
+  //     alert("User not logged in. Please log in first.");
+  //     navigate("/login");
+  //     return;
+  //   }
+  
+  //   try {
+  //     const chairData = { ...chairDetails, user_id };
+  
+  //     await axios.post("http://localhost:5000/api/chair/register-chair", chairData);
+  
+  //     // Store chair settings in localStorage
+  //     localStorage.setItem("chair_settings", JSON.stringify({
+  //       sitting_threshold: chairDetails.sitting_threshold,
+  //       relaxation_time: chairDetails.relaxation_time
+  //     }));
+  
+  //     alert("Chair registered successfully!");
+  //     navigate("/dashboard"); 
+  //   } catch (err) {
+  //     console.error(err.response?.data?.msg || "Chair registration failed");
+  //     alert(err.response?.data?.msg || "Chair registration failed");
+  //   }
+  // };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const user_id = localStorage.getItem("user_id"); // Get logged-in user's ID
-
+  
+    const user_id = localStorage.getItem("user_id");
+  
     if (!user_id) {
       alert("User not logged in. Please log in first.");
       navigate("/login");
       return;
     }
-
+  
     try {
       const chairData = { ...chairDetails, user_id }; // Link chair to user
-
+  
       await axios.post("http://localhost:5000/api/chair/register-chair", chairData);
-
+  
       alert("Chair registered successfully!");
-      navigate("/dashboard"); // Redirect to Dashboard
+  
+      // ✅ Request notification permission
+      if (Notification.permission !== "granted") {
+        await Notification.requestPermission();
+      }
+  
+      // ✅ Schedule a notification after 5 minutes (300,000 ms)
+      setTimeout(() => {
+        if (Notification.permission === "granted") {
+          new Notification("Take a Break!", {
+            body: `You've been sitting for a while. Time to take a short break!`,
+            icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png",
+          });
+        }
+      }, 300000); // 5 minutes in milliseconds
+  
+      navigate("/dashboard");
     } catch (err) {
       console.error(err.response?.data?.msg || "Chair registration failed");
       alert(err.response?.data?.msg || "Chair registration failed");
     }
   };
-
+  
   return (
     <div style={styles.pageContainer}>
       <div style={styles.container}>
@@ -303,6 +380,18 @@ export default function ChairRegistration() {
               Continuous Vibration
             </label>
           </div>
+          {/* <div style={styles.checkboxContainer}>
+            <label style={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                name="continuous_vibration"
+                checked={chairDetails.measureweight}
+                onChange={(e) => setChairDetails({ ...chairDetails, continuous_vibration: e.target.checked })}
+                style={styles.checkbox}
+              />
+              Measure Weight
+            </label>
+          </div> */}
           <button type="submit" style={styles.button}>Register Chair</button>
         </form>
       </div>

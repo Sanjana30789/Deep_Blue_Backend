@@ -177,5 +177,47 @@ router.post("/login", async (req, res) => {
 });
 
 
+// const jwt = require("jsonwebtoken");
+
+const authenticate = (req, res, next) => {
+  const token = req.header("Authorization");
+  if (!token) return res.status(401).json({ msg: "No token, authorization denied" });
+
+  try {
+      const tokenValue = token.startsWith("Bearer ") ? token.split(" ")[1] : token;
+      const decoded = jwt.verify(tokenValue, process.env.JWT_SECRET);
+      req.user = decoded;
+      next();
+  } catch (err) {
+      res.status(401).json({ msg: "Invalid token" });
+  }
+};
+
+module.exports = authenticate;
+
+
+
+router.get("/user", authenticate, async (req, res) => {
+  try {
+      const user = await User.findById(req.user.id).select("-password"); // Exclude password from response
+      if (!user) return res.status(404).json({ msg: "User not found" });
+
+      // Explicitly return chair_id in response
+      res.json({
+        user_id: user._id,
+        name: user.name,
+        email: user.email,
+        profilePic: user.profilePic || "default.jpg",
+        isChairRegistered: user.isChairRegistered || false,
+        chair_id: user.chair_id || null,  // Ensure chair_id is included
+      });
+
+  } catch (err) {
+      console.error("Error fetching user:", err);
+      res.status(500).json({ msg: "Server error" });
+  }
+});
+
+
 
 module.exports = router;

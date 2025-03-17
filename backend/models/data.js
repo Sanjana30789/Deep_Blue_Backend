@@ -10,7 +10,6 @@ const dataSchema = new mongoose.Schema({
   fsr4: { type: Number, required: true },   
   totalsittingduration : {type :Number,required : true},
   timestamp: { type: Date, default: Date.now }, 
-  measureweight : {type:Boolean ,required:true},
   weight : {type:Number},
 
 

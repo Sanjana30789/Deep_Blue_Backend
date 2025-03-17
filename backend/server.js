@@ -87,7 +87,8 @@ app.put('/data/:chair_id', async (req, res) => {
       sitting_threshold: existingData.sitting_threshold,
       continous_vibration: existingData.continous_vibration,
       measureweight: existingData.measureweight,
-      timestamp: existingData.timestamp
+      timestamp: existingData.timestamp,
+      weight : existingData.weight,
     });
 
     // ✅ Update with new data
@@ -184,29 +185,6 @@ app.get('/data', async (req, res) => {
 // });
 
 
-const authenticateToken = require("./middleware/authMiddleware"); // Import your auth middleware
-
-app.get("/user", authenticateToken, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id); // Fetch user from DB using ID from token
-
-    if (!user) {
-      return res.status(404).json({ msg: "User not found" });
-    }
-
-    res.json({
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      profilePic: user.profilePic || "default.jpg", // Ensure profilePic exists
-    });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: "Server error" });
-  }
-});
-
 
 
 // app.get('/data/:chair_id', async (req, res) => {
@@ -264,7 +242,6 @@ app.post('/data/:chair_id', async (req, res) => {
       res.status(500).json({ message: "Server error while saving data" });
   }
 });
-
 
 
 app.listen(port, () => {

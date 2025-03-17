@@ -90,18 +90,32 @@
   .row {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 10px;
     width: 1200px;
   }
   
   .chair-box{
-    border: 2px solid yellowgreen;
+    font-family: 'Poppins', sans-serif;
+    border: 3px solid darkslateblue;
+    border-radius: 15px;
+    color: #333;
+  }
+
+  .chair-box h2{
+    color: #333;
+  }
+
+
+  .chair-box p{
+    font-size: 20px;
+   margin-top: 20px;
   }
   .box {
-    width: 300px;
+    width: 400px;
+    height: 350px;
     flex: 1;
      padding: 20px;
-    background-color: #f8f9fa;
+    background-color: #ffffff;
     border-radius: 18px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -110,14 +124,76 @@
     
   }
 
+
+  .box1{
+    width: 400px;
+    height: 2080px;
+    flex: 1;
+     padding: 20px;
+    background-color: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 10px;
+    border: 3px solid darkslateblue;
+    
+  }
+  .readings-box {
+   
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    margin: auto;
+    font-family: 'Poppins', sans-serif;
+    border: 3px solid darkslateblue;
+    background-color: #ffffff;
+  }
   
-   .readings-box{
+  .readings-box h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .reading-card {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+  }
+  
+  .reading-card p {
+    font-size: 16px;
+    color: #555;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .reading-card span {
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  .timestamp {
+    font-size: 14px;
+    color: #888;
+    margin-top: 10px;
+    font-style: italic;
+  }
+  
+  
+   /* .readings-box{
     border: 3px solid yellowgreen;
    
   }
-  
+   */
   .image-box{
-    border: 3px solid yellowgreen;
+    border: 3px solid darkslateblue;
   }
   .image-box img {
     width: 100%;
@@ -152,3 +228,23 @@
    color: #ccc;
    margin-left: 15px;
   }
+
+
+  .countdown-container {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .circular-timer {
+    width: 80px;
+    height: 80px;
+    margin: 10px auto;
+  }
+  
+  .circular-timer {
+    width: 100px;
+    height: 100px;
+    margin: 10px auto;
+    background-color: rgba(0, 0, 0, 0.1); /* Temporary background for visibility */
+  }
+  

@@ -12,10 +12,17 @@ import ChairRegistration from './Components/chairRegister'
 import UserProfile from './Components/UserProfile';
 import AboutUs from './Components/AboutUs';
 import uploadProfilePicture from './Components/profileupload'
+import PosturePredictor from './Components/PosturePredictor'
+// import PostureModel from './Components/PostureMode
+// import NotificationSystem  from './Components/Notification'
+import Notifications from './Components/Notification'
+import FinalAnalysis from './Components/Analytics'
+import { div } from "three/tsl";
+import Settings from "./Components/Settings";
 
 function App() {
   return (
-    <Router>
+  <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/signup" element={<Signup />} />
@@ -24,13 +31,23 @@ function App() {
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/piechart" element={<PieChartPage />} />
         <Route path="/health" element={<HealthPage />} />
-        <Route path="/analysis" element={<Analytics />} />
+        {/* <Route path="/analysis" element={<Analytics />} /> */}
         <Route path="/ai" element={<AIRecommendation />} />
         <Route path="/chair-registration" element={<ChairRegistration />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/image" element={<uploadProfilePicture />} />
+        <Route path="/Posture" element={<PosturePredictor />} />
+        <Route path="/analysis" element={<FinalAnalysis />} />
+        <Route path="/settings" element={<Settings />} />
+        {/* <Route path="/model" element={<PostureModel />} /> */}
+        <Route path="/notifications" element={<Notifications />} /> {/* ✅ Add Notifications Route */}
       </Routes>
+
+      
+           {/* <NotificationSystem />  */}
     </Router>
+
+    
   );
 }
 

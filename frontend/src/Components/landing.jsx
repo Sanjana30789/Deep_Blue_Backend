@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import bgVideo from "../assets/Untitled design.mp4"; // Add your background video in the assets folder
+import bgVideo from "../assets/CHAIR.mp4";
 
 export default function LandingPage() {
   const navigate = useNavigate();

@@ -11,7 +11,7 @@ export default function GraphPage() {
   useEffect(() => {
     const fetchGraphData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/data");
+        const response = await fetch("http://localhost:5000/data/ALPHA");
         const data = await response.json();
 
         const groupedData = {};
@@ -66,53 +66,56 @@ export default function GraphPage() {
           gap: "20px",
         }}
       >
-        {Object.keys(dailyGraphData).map((date) => (
-          <div
-            key={date}
-            style={{
-              padding: "20px",
-              border: "1px solid #ddd",
-              borderRadius: "10px",
-              backgroundColor: "#f9f9f9",
-            }}
-          >
-            <h3 style={{ color: "#333" }}>📅 {date}</h3>
-            <Line
-              data={{
-                labels: dailyGraphData[date].labels,
-                datasets: [
-                  {
-                    label: "Sitting Duration (mins)",
-                    data: dailyGraphData[date].sittingDuration,
-                    borderColor: "blue",
-                    backgroundColor: "rgba(0,0,255,0.2)",
-                    fill: true,
-                  },
-                  {
-                    label: "FSR Reading",
-                    data: dailyGraphData[date].fsrReading,
-                    borderColor: "red",
-                    backgroundColor: "rgba(255,0,0,0.2)",
-                    fill: true,
-                  },
-                ],
-              }}
-            />
-            <div
-              style={{
-                marginTop: "20px",
-                padding: "10px",
-                backgroundColor: "#fff3cd",
-                borderRadius: "8px",
-              }}
-            >
-              <h4>📢 Recommendation:</h4>
-              <p style={{ fontSize: "16px", fontWeight: "bold", color: "#856404" }}>
-                {recommendations[date]}
-              </p>
-            </div>
-          </div>
-        ))}
+      {Object.keys(dailyGraphData)
+  .sort((a, b) => new Date(b) - new Date(a)) // Sorting dates in descending order
+  .map((date) => (
+    <div
+      key={date}
+      style={{
+        padding: "20px",
+        border: "1px solid #ddd",
+        borderRadius: "10px",
+        backgroundColor: "#f9f9f9",
+      }}
+    >
+      <h3 style={{ color: "#333" }}>📅 {date}</h3>
+      <Line
+        data={{
+          labels: dailyGraphData[date].labels,
+          datasets: [
+            {
+              label: "Sitting Duration (mins)",
+              data: dailyGraphData[date].sittingDuration,
+              borderColor: "blue",
+              backgroundColor: "rgba(0,0,255,0.2)",
+              fill: true,
+            },
+            {
+              label: "FSR Reading",
+              data: dailyGraphData[date].fsrReading,
+              borderColor: "red",
+              backgroundColor: "rgba(255,0,0,0.2)",
+              fill: true,
+            },
+          ],
+        }}
+      />
+      <div
+        style={{
+          marginTop: "20px",
+          padding: "10px",
+          backgroundColor: "#fff3cd",
+          borderRadius: "8px",
+        }}
+      >
+        <h4>📢 Recommendation:</h4>
+        <p style={{ fontSize: "16px", fontWeight: "bold", color: "#856404" }}>
+          {recommendations[date]}
+        </p>
+      </div>
+    </div>
+  ))}
+
       </div>
     </div>
   );
