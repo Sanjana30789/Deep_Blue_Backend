@@ -29,11 +29,12 @@ class SensorData(BaseModel):
     fsr2: float
     fsr3: float
     fsr4: float
+  
 
 @app.post("/predict/")
 async def predict_posture(data: SensorData):
     # Convert input data to NumPy array
-    input_data = np.array([[data.fsr1, data.fsr2, data.fsr3, data.fsr4]])
+    input_data = np.array([[data.fsr1, data.fsr2, data.fsr3, data.fsr4 ]])
 
     # Predict posture label
     predicted_label = model.predict(input_data)[0]

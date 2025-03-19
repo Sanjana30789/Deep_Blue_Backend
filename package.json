@@ -1,12 +1,15 @@
 {
   "dependencies": {
     "@react-three/drei": "^10.0.4",
-    "@react-three/fiber": "^9.0.4",
+    "@react-three/fiber": "^9.1.0",
+    "@react-three/gltfjsx": "^4.3.4",
     "chart.js": "^4.4.7",
     "jspdf": "^3.0.0",
     "multer": "^1.4.5-lts.1",
+    "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0",
     "react-circular-progressbar": "^2.2.0",
+    "react-dom": "^19.0.0",
     "react-heatmap-grid": "^0.9.1",
     "react-router-dom": "^7.1.5",
     "recharts": "^2.15.1",

@@ -24,16 +24,9 @@ const mongoURI = process.env.MONGODB_URL;
 // post all data 
 app.post('/data', async (req, res) => {
   console.log("Raw Request Body:", req.body);
-  // console.log("Extracted Chair ID:", req.body.chair_id);
-  // console.log("Type of Chair ID:", typeof req.body.chair_id);
-
-  // if (!req.body.chair_id) {
-  //   return res.status(400).json({ error: "chair_id is missing in request" });
-  // }
-
   try {
     const {
-      sittingDuration, fsr1, fsr2, fsr3, fsr4, totalsittingduration,
+      sittingDuration, fsr1, fsr2, fsr3, fsr4,fsr5,fsr6, totalsittingduration,
       relaxation_time, sitting_threhold, continous_vibration, measureweight
     } = req.body;
 
@@ -41,7 +34,7 @@ app.post('/data', async (req, res) => {
 
     const newData = new Data({
       sittingDuration,
-      fsr1, fsr2, fsr3, fsr4,
+      fsr1, fsr2, fsr3, fsr4,fsr5,fsr6,
       totalsittingduration,
       relaxation_time,
       sitting_threhold,
@@ -61,40 +54,141 @@ app.post('/data', async (req, res) => {
 });
 
 // Put Method for updating data and storing the previous data in history 
+// app.put('/data/:chair_id', async (req, res) => {
+//   try {
+//     // const chairId = req.params.chair_id.trim();
+//     const existingData = await Data.findOne({ chair_id: req.params.chair_id.trim() });
+
+//     if (!existingData) {
+//       return res.status(404).json({ message: "Data not found" });
+//     }
+
+//     // ✅ Ensure history array exists before using .push()
+//     if (!Array.isArray(existingData.history)) {
+//       existingData.history = [];
+//     }
+
+//     // ✅ Push old data to history array
+//     existingData.history.push({
+//       sittingDuration: existingData.sittingDuration,
+//       fsr1: existingData.fsr1,
+//       fsr2: existingData.fsr2,
+//       fsr3: existingData.fsr3,
+//       fsr4: existingData.fsr4,
+//       fsr5: existingData.fsr5,
+//       fsr6: existingData.fsr6,
+//       totalsittingduration: existingData.totalsittingduration,
+//       relaxation_time: existingData.relaxation_time,
+//       sitting_threshold: existingData.sitting_threshold,
+//       continous_vibration: existingData.continous_vibration,
+//       measureweight: existingData.measureweight,
+//       timestamp: existingData.timestamp,
+//       weight : existingData.weight,
+//     });
+
+//     // ✅ Update with new data
+//     Object.assign(existingData, req.body, { timestamp: new Date() });
+
+//     await existingData.save();
+//     res.json({ message: "Data updated successfully", updatedData: existingData });
+
+//   } catch (err) {
+//     console.error("Error updating data:", err);
+//     res.status(500).json({ message: err.message });
+//   }
+// });
+
+
+// app.put('/data/:chair_id', async (req, res) => {
+//   try {
+//     console.log("Received data:", req.body); // Check what is coming in the request
+
+//     const existingData = await Data.findOne({ chair_id: req.params.chair_id.trim() });
+
+//     if (!existingData) {
+//       return res.status(404).json({ message: "Data not found" });
+//     }
+
+//     if (!Array.isArray(existingData.history)) {
+//       existingData.history = [];
+//     }
+
+//     existingData.history.push({
+//       sittingDuration: existingData.sittingDuration,
+//       fsr1: existingData.fsr1,
+//       fsr2: existingData.fsr2,
+//       fsr3: existingData.fsr3,
+//       fsr4: existingData.fsr4,
+//       fsr5: existingData.fsr5,
+//       fsr6: existingData.fsr6,
+//       totalsittingduration: existingData.totalsittingduration,
+//       timestamp: existingData.timestamp,
+//       weight: existingData.weight,
+//     });
+
+//     // ✅ Log before updating
+//     console.log("Before update:", existingData);
+
+//     Object.assign(existingData, req.body, { timestamp: new Date() });
+
+//     await existingData.save();
+
+//     // ✅ Log after update
+//     console.log("After update:", existingData);
+
+//     res.json({ message: "Data updated successfully", updatedData: existingData });
+
+//   } catch (err) {
+//     console.error("Error updating data:", err);
+//     res.status(500).json({ message: err.message });
+//   }
+// });
+
+
 app.put('/data/:chair_id', async (req, res) => {
   try {
-    // const chairId = req.params.chair_id.trim();
+    console.log("Received data:", req.body); // Debug request body
+
     const existingData = await Data.findOne({ chair_id: req.params.chair_id.trim() });
 
     if (!existingData) {
       return res.status(404).json({ message: "Data not found" });
     }
 
-    // ✅ Ensure history array exists before using .push()
     if (!Array.isArray(existingData.history)) {
       existingData.history = [];
     }
 
-    // ✅ Push old data to history array
     existingData.history.push({
       sittingDuration: existingData.sittingDuration,
       fsr1: existingData.fsr1,
       fsr2: existingData.fsr2,
       fsr3: existingData.fsr3,
       fsr4: existingData.fsr4,
+      fsr5: existingData.fsr5,
+      fsr6: existingData.fsr6,
       totalsittingduration: existingData.totalsittingduration,
-      relaxation_time: existingData.relaxation_time,
-      sitting_threshold: existingData.sitting_threshold,
-      continous_vibration: existingData.continous_vibration,
-      measureweight: existingData.measureweight,
       timestamp: existingData.timestamp,
-      weight : existingData.weight,
+      weight: existingData.weight,
     });
 
-    // ✅ Update with new data
-    Object.assign(existingData, req.body, { timestamp: new Date() });
+    // ✅ Ensure fsr5 and fsr6 are updated
+    Object.assign(existingData, {
+      fsr1: req.body.fsr1 ?? existingData.fsr1,
+      fsr2: req.body.fsr2 ?? existingData.fsr2,
+      fsr3: req.body.fsr3 ?? existingData.fsr3,
+      fsr4: req.body.fsr4 ?? existingData.fsr4,
+      fsr5: req.body.fsr5 ?? existingData.fsr5, // Ensuring fsr5 updates
+      fsr6: req.body.fsr6 ?? existingData.fsr6, // Ensuring fsr6 updates
+      timestamp: new Date()
+    });
+
+    console.log("Before saving:", existingData); // Debug before saving
 
     await existingData.save();
+
+    console.log("Updated document in DB:", await Data.findOne({ chair_id: req.params.chair_id.trim() }));
+
     res.json({ message: "Data updated successfully", updatedData: existingData });
 
   } catch (err) {
@@ -102,6 +196,46 @@ app.put('/data/:chair_id', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+
+
+
+// app.put('/data/:chair_id', async (req, res) => {
+//   try {
+//     console.log("Received PUT request:", req.body); // Log incoming data
+
+//     const existingData = await Data.findOne({ chair_id: req.params.chair_id.trim() });
+
+//     if (!existingData) {
+//       return res.status(404).json({ message: "Data not found" });
+//     }
+
+//     console.log("Before update:", existingData); // Log existing document
+
+//     // Check if the incoming request has fsr5 and fsr6
+//     if (req.body.fsr5 === undefined || req.body.fsr6 === undefined) {
+//       return res.status(400).json({ message: "fsr5 and fsr6 are missing in the request body" });
+//     }
+
+//     // Update fields individually
+//     existingData.fsr5 = req.body.fsr5;
+//     existingData.fsr6 = req.body.fsr6;
+
+//     // Save the updated document
+//     await existingData.save();
+
+//     console.log("After update:", existingData); // Log after updating
+
+//     res.json({ message: "Data updated successfully", updatedData: existingData });
+
+//   } catch (err) {
+//     console.error("Error updating data:", err);
+//     res.status(500).json({ message: err.message });
+//   }
+// });
+
+
+
 
 
 

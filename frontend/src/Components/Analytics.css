@@ -1,31 +1,52 @@
 .analysis-container {
-  padding: 2rem;
-  background-color: #f8f9fa;
-  min-height: 100vh;
+  padding: 20px;
   text-align: center;
+  background-color: #f4f4f4;
+  min-height: 100vh;
 }
 
-.data-counter {
-  font-size: 1.5rem;
-  font-weight: bold;
+h1 {
   color: #333;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  background: #f4f4f4;
-  border-radius: 10px;
-  display: inline-block;
 }
 
-.charts-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  margin-top: 2rem;
+/* Grid Layout for Charts */
+.chart-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;  /* Increased gap for better separation */
+  margin-bottom: 30px; /* Space between rows */
 }
 
+/* Individual Chart Cards */
 .chart-card {
   background: white;
+  padding: 20px;
   border-radius: 10px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 45%;
+  min-width: 300px;
+  margin-bottom: 30px; /* Extra margin below each card */
+}
+
+/* Heatmap Styling */
+.heatmap-container {
+  width: 90%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.heatmap-wrapper {
+  overflow-x: auto;
+}
+
+/* Adjust spacing for mobile screens */
+@media (max-width: 768px) {
+  .chart-grid {
+    flex-direction: column;
+  }
+
+  .chart-card {
+    width: 90%;
+  }
 }

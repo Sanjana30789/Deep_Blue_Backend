@@ -8,28 +8,28 @@ const dataSchema = new mongoose.Schema({
   fsr2: { type: Number, required: true },  
   fsr3: { type: Number, required: true },
   fsr4: { type: Number, required: true },   
+  fsr5: { type: Number, required: true }, 
+  fsr6: { type: Number, required: true }, 
   totalsittingduration : {type :Number,required : true},
   timestamp: { type: Date, default: Date.now }, 
   weight : {type:Number},
 
 
 
-//   history: [
-//     {
-//         sittingDuration: Number,
-//         fsr1: Number,
-//         fsr2: Number,
-//         fsr3: Number,
-//         fsr4: Number,
-//         totalsittingduration: Number,
-//         // relaxation_time: Number,
-//         // sitting_threshold: Number,
-//         // continous_vibration: Boolean,
-//         measureweight: Boolean,
-//         weight: Number,
-//         timestamp: { type: Date, default: Date.now }
-//     }
-// ]
+  history: [
+    {
+        sittingDuration: Number,
+        fsr1: Number,
+        fsr2: Number,
+        fsr3: Number,
+        fsr4: Number,
+        fsr5: Number,
+        fsr6: Number,
+        totalsittingduration: Number,
+        weight: Number,
+        timestamp: { type: Date, default: Date.now }
+    }
+]
 });
 
 module.exports = mongoose.model('Data', dataSchema);

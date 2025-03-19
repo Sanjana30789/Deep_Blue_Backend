@@ -8,7 +8,7 @@ const PosturePredictor = () => {
     fsr1: 0,
     fsr2: 0,
     fsr3: 0,
-    fsr4: 0,
+    fsr4: 0, 
   });
 
   const [prediction, setPrediction] = useState("");
@@ -16,26 +16,32 @@ const PosturePredictor = () => {
   // Fetch FSR values from API
   const fetchFSRValues = async () => {
     try {
-      const response = await fetch(
-        "https://deep-blue-backend-1-tiy7.onrender.com/data/ALPHA"
-      );
-      const data = await response.json();
+        const response = await fetch("https://deep-blue-backend-2-lwms.onrender.com/data/PRAM");
+        const data = await response.json();
+        
+        console.log("API Response:", data); // Log the full response
+        
+        if (Array.isArray(data) && data.length > 0) {
+            const latestData = data[0];
 
-      if (Array.isArray(data) && data.length > 0) {
-        const latestData = data[0];
-        setFsrValues({
-          fsr1: parseFloat(latestData.fsr1),
-          fsr2: parseFloat(latestData.fsr2),
-          fsr3: parseFloat(latestData.fsr3),
-          fsr4: parseFloat(latestData.fsr4),
-        });
-      } else {
-        console.error("FSR values not found in API response:", data);
-      }
+            console.log("Extracted Data:", latestData); // Log extracted data
+
+            setFsrValues({
+                fsr1: parseFloat(latestData.fsr1) || 0,
+                fsr2: parseFloat(latestData.fsr2) || 0,
+                fsr3: parseFloat(latestData.fsr3) || 0,
+                fsr4: parseFloat(latestData.fsr4) || 0,
+               
+            });
+        } else {
+            console.error("FSR values not found in API response:", data);
+        }
     } catch (error) {
-      console.error("Error fetching FSR data:", error);
+        console.error("Error fetching FSR data:", error);
     }
-  };
+};
+
+  
 
   // Predict posture when values are updated
   const handlePredict = async () => {
@@ -51,13 +57,13 @@ const PosturePredictor = () => {
   // Fetch values every 5 seconds
   useEffect(() => {
     fetchFSRValues();
-    const interval = setInterval(fetchFSRValues, 5000);
+    const interval = setInterval(fetchFSRValues, 2000);
     return () => clearInterval(interval);
   }, []);
 
   // Trigger prediction when FSR values update
   useEffect(() => {
-    if (fsrValues.fsr1 || fsrValues.fsr2 || fsrValues.fsr3 || fsrValues.fsr4) {
+    if (fsrValues.fsr1 || fsrValues.fsr2 || fsrValues.fsr3 || fsrValues.fsr4 ) {
       handlePredict();
     }
   }, [fsrValues]);

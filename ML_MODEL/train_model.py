@@ -7,12 +7,12 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 
 # 1. Load dataset
-file_path = r"./fsr_data1.csv"  # Updated Path
+file_path = r"./fsr_data.csv"  # Updated Path
 df = pd.read_csv(file_path)
 
 # 2. Select FSR features and target variable
 X = df[['fsr1', 'fsr2', 'fsr3', 'fsr4']].values  # Input Features (FSR values)
-y = df['posture'].values  # Target Variable (Posture)
+y = df['Posture'].values  # Target Variable (Posture)
 
 # 3. Encode posture labels
 label_encoder = LabelEncoder()
