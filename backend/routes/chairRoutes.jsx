@@ -64,9 +64,30 @@ router.post('/register-chair', async (req, res) => {
 });
 
 // FOR GETTING THE CHAIR DATA FROM CHAIR ID
+// router.get('/chair-data/:chair_id', async (req, res) => {
+//     try {
+//         const chairId = String(req.params.chair_id).trim();  // Convert to string & remove spaces
+//         console.log("Received chair_id:", chairId, "Type:", typeof chairId);
+
+//         const chairData = await Chair.findOne({ chair_id: chairId });
+
+//         console.log("Database response:", chairData);
+
+//         if (!chairData) {
+//             return res.status(404).json({ msg: "No chair data found" });
+//         }
+
+//         res.json(chairData);
+//     } catch (err) {
+//         console.error("Error fetching chair data by chair_id:", err);
+//         res.status(500).json({ msg: "Server error" });
+//     }
+// });
+
+
 router.get('/chair-data/:chair_id', async (req, res) => {
     try {
-        const chairId = String(req.params.chair_id).trim();  // Convert to string & remove spaces
+        const chairId = String(req.params.chair_id).trim();
         console.log("Received chair_id:", chairId, "Type:", typeof chairId);
 
         const chairData = await Chair.findOne({ chair_id: chairId });
@@ -77,7 +98,16 @@ router.get('/chair-data/:chair_id', async (req, res) => {
             return res.status(404).json({ msg: "No chair data found" });
         }
 
-        res.json(chairData);
+        res.json({ 
+            chair_id: chairData.chair_id,
+            user_id: chairData.user_id,
+            relaxation_time: chairData.relaxation_time,
+            sitting_threshold: chairData.sitting_threshold,
+            continuous_vibration: chairData.continuous_vibration,
+            measureweight: chairData.measureweight,
+            is_object :chairData.is_object// Added measureweight
+        });
+
     } catch (err) {
         console.error("Error fetching chair data by chair_id:", err);
         res.status(500).json({ msg: "Server error" });
@@ -85,22 +115,72 @@ router.get('/chair-data/:chair_id', async (req, res) => {
 });
 
 // FOR UPDATING THE CHAIR DETAILS 
+// router.put("/chair-settings/:chair_id", async (req, res) => {
+//     try {
+//         const { chair_id } = req.params;
+//         const { sitting_threshold, relaxation_time } = req.body;
+
+//         const updatedChair = await Chair.findOneAndUpdate(
+//             { chair_id },
+//             { sitting_threshold, relaxation_time },
+//             { new: true } // Return updated document
+//         );
+
+//         if (!updatedChair) {
+//             return res.status(404).json({ message: "Chair not found" });
+//         }
+
+//         res.json(updatedChair);
+//     } catch (error) {
+//         res.status(500).json({ message: "Server error", error });
+//     }
+// });
+
 router.put("/chair-settings/:chair_id", async (req, res) => {
     try {
         const { chair_id } = req.params;
-        const { sitting_threshold, relaxation_time } = req.body;
+        const { sitting_threshold, relaxation_time, measureweight ,is_object,continuous_vibration} = req.body; // Added measureweight
 
         const updatedChair = await Chair.findOneAndUpdate(
             { chair_id },
-            { sitting_threshold, relaxation_time },
-            { new: true } // Return updated document
+            { sitting_threshold, relaxation_time, measureweight ,is_object,continuous_vibration}, // Update measureweight too
+            { new: true }
         );
 
         if (!updatedChair) {
             return res.status(404).json({ message: "Chair not found" });
         }
 
-        res.json(updatedChair);
+        res.json({
+            message: "Chair settings updated successfully",
+            updatedChair
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+});
+
+router.post("/chair-settings/:chair_id", async (req, res) => {
+    try {
+        const { chair_id } = req.params;
+        const { sitting_threshold, relaxation_time, measureweight, is_object ,continuous_vibration} = req.body;
+
+        const updatedChair = await Chair.findOneAndUpdate(
+            { chair_id },
+            { sitting_threshold, relaxation_time, measureweight, is_object,continuous_vibration },
+            { new: true }
+        );
+
+        if (!updatedChair) {
+            return res.status(404).json({ message: "Chair not found" });
+        }
+
+        res.json({
+            message: "Chair settings updated successfully",
+            updatedChair
+        });
+
     } catch (error) {
         res.status(500).json({ message: "Server error", error });
     }

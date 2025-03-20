@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 const dataSchema = new mongoose.Schema({
 
-  sittingDuration: { type: Number, required: true }, 
+  sittingDuration: { type: Number}, 
   chair_id: { type: mongoose.Schema.Types.String, ref: "Chair", required: true },
   fsr1: { type: Number, required: true }, 
   fsr2: { type: Number, required: true },  
   fsr3: { type: Number, required: true },
   fsr4: { type: Number, required: true }, 
-  totalsittingduration : {type :Number,required : true},
+  totalsittingduration : {type :Number},
   timestamp: { type: Date, default: Date.now }, 
   weight : {type:Number ,required:true},
 

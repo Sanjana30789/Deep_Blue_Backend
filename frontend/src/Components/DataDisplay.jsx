@@ -20,6 +20,8 @@ import FinalAnalysis from './Analytics'
 import SettingsPage from './ExercisePopup'
 import PostureModel from "./PostureModel";
 import AnimePosture from './finalposture'
+import Sitting from './Sitting'
+import Weight from './Weigh'
 
 
 ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);
@@ -37,100 +39,6 @@ export default function Dashboard() {
     const progress = (countdown / (chairData?.relaxation_time || 30)) * circumference;
   const navigate = useNavigate();
   
-
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //         const token = localStorage.getItem("token");
-  //         if (!token) {
-  //             console.error("No token found, user not logged in.");
-  //             return;
-  //         }
-  
-  //         const response = await fetch("http://localhost:5000/api/auth/user", {
-  //             method: "GET",
-  //             headers: { 
-  //                 Authorization: `Bearer ${token}`,
-  //                 "Content-Type": "application/json"
-  //             },
-  //         });
-  
-  //         const userData = await response.json();
-  
-  //         if (response.ok) {
-  //             console.log("Fetched User Data:", userData);
-  //             setUser(userData); // Set user data in state
-  
-  //             // Fetch chair data using chair_id if available
-  //             if (userData?.chair_id) {
-  //                 fetchChairData(userData.chair_id);
-  //             }
-  //         } else {
-  //             console.error("Error fetching user:", userData.msg);
-  //         }
-  //     } catch (error) {
-  //         console.error("Error fetching user:", error);
-  //     }
-  // };
-  
-
-  //   const fetchSensorData = async () => {
-  //     try {
-  //       const response = await fetch(`http://localhost:5000/data/ALPHA`);
-  //       if (!response.ok) throw new Error(`API Error: ${response.status}`);
-
-  //       const data = await response.json();
-  //       const sensorArray = Array.isArray(data) ? data : data.data;
-
-  //       if (!Array.isArray(sensorArray)) {
-  //         console.error("Error: Sensor data is not an array:", sensorArray);
-  //         return;
-  //       }
-
-  //       const today = new Date().toLocaleDateString();
-  //       const todayReadings = sensorArray.filter(reading =>
-  //         new Date(reading.timestamp).toLocaleDateString() === today
-  //       );
-
-  //       setSensorData(todayReadings.length > 0 ? todayReadings.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0] : null);
-  //     } catch (error) {
-  //       console.error("Error fetching sensor data:", error);
-  //     }
-  //   };
-
-  //   const fetchChairData = async (chair_id) => {
-  //     if (!chair_id) {
-  //         console.error("Chair ID is missing.");
-  //         return;
-  //     }
-  
-  //     try {
-  //         const response = await fetch(`http://localhost:5000/api/chair/chair-data/${chair_id}`);
-  //         if (!response.ok) throw new Error(`API Error: ${response.status}`);
-  
-  //         const data = await response.json();
-  //         setChairData(data);
-  
-  //         if (data.sittingThreshold && sensorData?.sittingDuration > data.sittingThreshold) {
-  //             setCountdown(data.relaxationTime);
-  //         }
-  //     } catch (error) {
-  //         console.error("Error fetching chair data:", error);
-  //     }
-  // };
-  
-
-  //   fetchUserData();
-  //   fetchSensorData();
-  //   fetchChairData();
-
-  //   const interval = setInterval(() => {
-  //     fetchSensorData();
-  //     fetchChairData();
-  //   }, 1000);
-
-  //   return () => clearInterval(interval);
-  // }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -278,27 +186,6 @@ useEffect(() => {
 
 
 
-
-
-// 🟢 Countdown logic
-// useEffect(() => {
-//   if (showExercise && timeLeft > 0) {
-//     const timer = setInterval(() => {
-//       setTimeLeft((prevTime) => {
-//         if (prevTime <= 1) {
-//           clearInterval(timer);
-//           setShowExercise(false);
-//           return 0;
-//         }
-//         return prevTime - 1;
-//       });
-//     }, 1000);
-
-//     return () => clearInterval(timer);
-//   }
-// }, [showExercise, timeLeft]);
-
-
 const formatDuration = (seconds) => {
   if (!seconds || seconds < 0) return "00:00:00";
   
@@ -308,16 +195,6 @@ const formatDuration = (seconds) => {
 
   return `${hrs.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 };
-
-
-// useEffect(() => {
-//   if (sensorData.sittingDuration >= sitting_threshold) {
-//     setShowExercise(true);
-//   }
-// }, [sensorData.sittingDuration]);
-
-
-
 
   useEffect(() => {
 
@@ -413,55 +290,63 @@ const formatDuration = (seconds) => {
             <button className="nav-button">⚙️ Settings</button>
           </div>
         </div>
-
-
-         <AnimePosture/>
-
-
-
-
-
         {/* Sensor Readings & IoT Live Feed */}
-        <div className="row" >
-  <div
-    className="box readings-box"
-   
-  >
-    <h2>📊 Today's Sensor Readings</h2>
+        <div className="row">
+  {/* Sitting Duration Card */}
+  <div className="box readings-box">
+    <h2>📊 Sitting Duration</h2>
     {sensorData ? (
-      <div className="reading-card">
-        <p>
-          Sitting Duration: <span>{formatDuration(sensorData.sittingDuration)}</span>
-        </p>
-        <p>
-          Weight: <span>{sensorData.weight}</span>
-        </p>
-        <p>
+      <div className="card-1">
+      
+           <span className="one">{formatDuration(sensorData.sittingDuration)}
+            </span>
+        
+        {/* <p>
           Total Sitting Duration: <span>{formatDuration(sensorData.totalsittingduration)}</span>
-        </p>
-        {chairData ? (
-          <div>
-            <p>
-              Chair ID: <span>{chairData.chair_id}</span>
-            </p>
-            <p>
-              Sitting Threshold: <span>{formatDuration(chairData.sitting_threshold)}</span>
-            </p>
-          </div>
-        ) : (
-          <p>No chair data available</p>
-        )}
-        <p className="timestamp">⏱ {new Date(sensorData.timestamp).toLocaleString()}</p>
+        </p> */}
+        {/* <p className="timestamp">⏱ {new Date(sensorData.timestamp).toLocaleString()}</p> */}
       </div>
     ) : (
-      <p>No data available for today</p>
+      <p>No sitting data available</p>
     )}
   </div>
 
- 
-  <div className="box chair-box1" >
+  {/* Weight Card */}
+  <div className="box readings-box">
+    <h2>⚖️ Weight</h2>
+    {sensorData ? (
+      <div className="card-1">
+        
+          <span className="one">{sensorData.weight}</span>
+        
+      
+      </div>
+    ) : (
+      <p>No weight data available</p>
+    )}
+  </div>
+
+  {/* Chair Details Card */}
+  {/* <div className="box readings-box">
+    <h2>🪑 Chair Details</h2>
+    {chairData ? (
+      <div className="reading-card">
+        <p>
+          Chair ID: <span>{chairData.chair_id}</span>
+        </p>
+        <p>
+          Sitting Threshold: <span>{formatDuration(chairData.sitting_threshold)}</span>
+        </p>
+      </div>
+    ) : (
+      <p>No chair data available</p>
+    )}
+  </div> */}
+
+  {/* Relaxation Timer Card */}
+  <div className="box chair-box1">
     <div className="countdown-container">
-      <p>Relaxation Time:</p>
+    <h2>Relaxation Time </h2>
       <div className="circular-timer">
         <svg width="120" height="120">
           <circle cx="60" cy="60" r="50" className="timer-circle-bg" />
@@ -472,7 +357,7 @@ const formatDuration = (seconds) => {
             className="timer-circle"
             strokeDasharray={circumference}
             strokeDashoffset={circumference - progress}
-            style={{ stroke: countdown > 10 ? "#4CAF50" : "#FF3D00" }} // Green > 10s, Red <= 10s
+            style={{ stroke: countdown > 10 ? "#4CAF50" : "#FF3D00" }}
           />
         </svg>
         <div className="countdown-text">
@@ -481,14 +366,19 @@ const formatDuration = (seconds) => {
       </div>
     </div>
   </div>
-
-  <div className="animate">
-<PostureModel />
-
 </div>
+
+<div className="row-1">
+  
+    <Sitting />
 
   
+    <Weight />
+  
 </div>
+
+<AnimePosture/>
+
 
 
 <div>
@@ -496,8 +386,13 @@ const formatDuration = (seconds) => {
   
    </div>
 
+   
+
+
+  
+
  {/* Data Analysis */}
-        <div className="row">
+        {/* <div className="row">
           <div className="box1">
             <h2>📊 Data Analysis</h2>
             <GraphPage />
@@ -512,7 +407,7 @@ const formatDuration = (seconds) => {
           </div>
         
          
-        </div>
+        </div> */}
       </div>
     </div>
   );

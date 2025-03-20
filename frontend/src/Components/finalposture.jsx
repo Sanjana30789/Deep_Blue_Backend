@@ -176,47 +176,33 @@ useEffect(() => {
 
   return (
     <div className="posture-container">
-      <div className="posture-content">
-        {/* Animation on the Left */}
+    <div className="posture-content">
+      {/* Posture Stimulation - Left */}
+      <div className="posture-stimulation">
+        <h3>Posture Stimulation</h3>
         <div className="animation-container">
           <Canvas camera={{ position: [0, 1.5, 4], fov: 50 }}>
             <PostureModelComponent animationName={animationName} />
           </Canvas>
         </div>
-
-        {/* Posture Data on the Right */}
-        <div className="info-container">
-          <h2>Posture Prediction</h2>
-
-          <div className="fsr-values">
-            {["fsr1", "fsr2", "fsr3", "fsr4"].map((fsr, index) => (
-              <div key={index} className="fsr-box">
-                <strong>{fsr.toUpperCase()}:</strong> {fsrValues[fsr]}
-              </div>
-            ))}
-          </div>
-
-          {prediction && (
-            <div className="prediction-text">Predicted Posture: {prediction}</div>
-          )}
-
-{/* Warning Popup for Incorrect Posture */}
-{showWarningPopup && (
-  <div className="popup-warning">
-    ⚠️ Incorrect Posture Detected! Please correct your position.
-  </div>
-)}
-
-{/* Success Popup for Straight Posture */}
-{showSuccessPopup && (
-  <div className="popup-success">
-    ✅ Good Posture! Maintain it. 
-  </div>
-)}
-
+      </div>
+  
+      {/* Posture Prediction - Right */}
+      <div className="posture-prediction">
+        <h3>Posture Prediction</h3>
+        <div className="fsr-grid">
+          {["fsr1", "fsr2", "fsr3", "fsr4"].map((fsr, index) => (
+            <div key={index} className="fsr-box">
+              <strong>{fsr.toUpperCase()}:</strong> {fsrValues[fsr]}
+            </div>
+          ))}
         </div>
+        <div className="prediction-text">{prediction}</div>
       </div>
     </div>
+  </div>
+  
+  
   );
 };
 
