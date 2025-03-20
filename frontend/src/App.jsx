@@ -21,6 +21,11 @@ import { div } from "three/tsl";
 import Settings from "./Components/Settings";
 import AnimePosture from "./Components/finalposture"
 import Development from "./Components/develop";
+import LastAnalysis from './Components/LastAnalysis';
+import SittingPattern from './Components/SittingPattern';
+import ExercisePage from "./Components/ExercisePage";  // ✅ Import ExercisePage
+import ProfilePage from "./Components/ProfilePage";  // ✅ Import ProfilePage
+
 
 function App() {
   return (
@@ -30,7 +35,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/piechart" element={<PieChartPage />} />
         <Route path="/health" element={<HealthPage />} />
         {/* <Route path="/analysis" element={<Analytics />} /> */}
@@ -44,6 +49,9 @@ function App() {
         <Route path="/model" element={<PostureModel />} />
         <Route path="/final" element={<AnimePosture />} />
         <Route path="/developer" element={<Development />} />
+        <Route path="/last-analysis" element={<LastAnalysis />} />
+        <Route path="/sitting-pattern" element={<SittingPattern />} />
+        <Route path="/exercise" element={<ExercisePage />} />  {/* ✅ Add Exercise Page Route */}
         <Route path="/notifications" element={<Notifications />} /> {/* ✅ Add Notifications Route */}
       </Routes>
 

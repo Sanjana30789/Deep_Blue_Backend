@@ -394,6 +394,9 @@ const formatDuration = (seconds) => {
         <button onClick={() => navigate('/analysis')} className='sidebar-button'>Detailed Analysis</button>
         <button onClick={() => navigate('/settings')} className='sidebar-button'>SETTINGS</button>
         <button onClick={() => navigate('/developer')} className='sidebar-button'>Developvers Page</button>
+        <button onClick={() => navigate('/last-analysis')} className='sidebar-button'>📊 Weight Analysis</button>
+        <button onClick={() => navigate('/sitting-pattern')} className='sidebar-button'>📊 Sitting Analysis</button>
+        <button onClick={() => navigate('/exercise')} className='sidebar-button'>🏋️ Exercise</button>  {/* ✅ New Exercise Button */}
         <button onClick={handleLogout} className='sidebar-button logout-btn'>🚪 Logout</button>
         {/* <button onClick={handleShowExercise}>Show Exercise</button> */}
 

@@ -1,0 +1,202 @@
+/* SittingPattern.css */
+
+.sitting-pattern-container {
+    padding: 2rem;
+    background: #f8f9fa;
+    min-height: 100vh;
+    max-width: 1800px;
+    margin: 0 auto;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid #3498db;
+  }
+  
+  /* Status Cards */
+  .status-row {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .status-card {
+    flex: 1;
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .current-duration {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+  }
+  
+  .total-duration {
+    background: linear-gradient(135deg, #2196F3, #1976D2);
+    color: white;
+  }
+  
+  .duration-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .duration-value {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .duration-label {
+    font-size: 1.2rem;
+    opacity: 0.9;
+  }
+  
+  .update-time {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+  
+  /* Chart Layout */
+  .chart-row {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .chart-card {
+    flex: 1;
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 500px;
+  }
+  
+  .chart-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .chart-card h2 {
+    color: #34495e;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e0e0e0;
+  }
+  
+  .chart-wrapper {
+    position: relative;
+    height: 450px;
+    width: 100%;
+  }
+  
+  /* Statistics Cards */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .stat-card h3 {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .stat-card p {
+    color: #3498db;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1400px) {
+    .chart-card {
+      min-height: 400px;
+    }
+  
+    .chart-wrapper {
+      height: 350px;
+    }
+  
+    .duration-value {
+      font-size: 3rem;
+    }
+  }
+  
+  @media (max-width: 1200px) {
+    .status-row,
+    .chart-row {
+      flex-direction: column;
+    }
+  
+    .stats-row {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  
+    .chart-card {
+      min-height: 400px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .sitting-pattern-container {
+      padding: 1rem;
+    }
+  
+    .stats-row {
+      grid-template-columns: 1fr;
+    }
+  
+    .chart-card {
+      min-height: 350px;
+      padding: 1rem;
+    }
+  
+    .chart-wrapper {
+      height: 300px;
+    }
+  
+    .duration-value {
+      font-size: 2.5rem;
+    }
+  
+    h1 {
+      font-size: 2rem;
+    }
+  
+    .chart-card h2 {
+      font-size: 1.5rem;
+    }
+  }

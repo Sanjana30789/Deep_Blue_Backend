@@ -1,0 +1,227 @@
+/* LastAnalysis.css */
+
+.lastanalysis-container {
+    padding: 2rem;
+    background: #f8f9fa;
+    min-height: 100vh;
+    max-width: 1800px;
+    margin: 0 auto;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid #3498db;
+  }
+  
+  .chart-row {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .chart-card {
+    flex: 1;
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chart-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .chart-card h2 {
+    color: #34495e;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e0e0e0;
+  }
+  
+  .chart-wrapper {
+    position: relative;
+    height: 450px;
+    width: 100%;
+    flex-grow: 1;
+  }
+  
+  /* Current Weight Card Styles */
+  .current-weight {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(135deg, #6dd5ed, #2193b0);
+    color: white;
+  }
+  
+  .current-weight h2 {
+    color: white;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .weight-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .weight-value {
+    font-size: 4.5rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .weight-timestamp {
+    font-size: 1.2rem;
+    opacity: 0.9;
+  }
+  
+  /* Stats Card Styles */
+  .stats-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 1rem;
+    height: 100%;
+  }
+  
+  .stat-item {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .stat-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .stat-item h3 {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .stat-item p {
+    color: #3498db;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  /* Animations */
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+  
+  .chart-card.updating {
+    animation: pulse 1s ease;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1400px) {
+    .chart-card {
+      min-height: 400px;
+    }
+  
+    .chart-wrapper {
+      height: 350px;
+    }
+  
+    .weight-value {
+      font-size: 3.5rem;
+    }
+  }
+  
+  @media (max-width: 1200px) {
+    .chart-row {
+      flex-direction: column;
+    }
+  
+    .chart-card {
+      min-height: 400px;
+    }
+  
+    .stats-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .lastanalysis-container {
+      padding: 1rem;
+    }
+  
+    .chart-card {
+      min-height: 350px;
+      padding: 1rem;
+    }
+  
+    .chart-wrapper {
+      height: 300px;
+    }
+  
+    .weight-value {
+      font-size: 3rem;
+    }
+  
+    .stats-container {
+      grid-template-columns: 1fr;
+    }
+  
+    .stat-item h3 {
+      font-size: 1rem;
+    }
+  
+    .stat-item p {
+      font-size: 1.5rem;
+    }
+  
+    h1 {
+      font-size: 2rem;
+    }
+  
+    .chart-card h2 {
+      font-size: 1.5rem;
+    }
+  }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
