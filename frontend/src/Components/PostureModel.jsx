@@ -4,7 +4,7 @@ import { OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
 const PostureModelComponent = () => {
-  const { scene, nodes, animations } = useGLTF("/finalanimation.gltf");
+  const { scene, nodes, animations } = useGLTF("/newanimation.gltf");
   const mixerRef = useRef(null);
   const actionRefs = useRef([]);
   const indexRef = useRef(0); // Keep track of the current animation index

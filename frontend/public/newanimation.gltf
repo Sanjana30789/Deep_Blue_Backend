@@ -58872,57 +58872,57 @@
 		{
 			"mimeType":"image/jpeg",
 			"name":"BodyMale_Normal",
-			"uri":"finalanimationcolors/BodyMale_Normal.jpg"
+			"uri":"newcolorsposture/BodyMale_Normal.jpg"
 		},
 		{
 			"mimeType":"image/jpeg",
 			"name":"BodyMale_Color",
-			"uri":"finalanimationcolors/BodyMale_Color.jpg"
+			"uri":"newcolorsposture/BodyMale_Color.jpg"
 		},
 		{
 			"mimeType":"image/jpeg",
 			"name":"KARI_Normal_1K",
-			"uri":"finalanimationcolors/KARI_Normal_1K.jpg"
+			"uri":"newcolorsposture/KARI_Normal_1K.jpg"
 		},
 		{
 			"mimeType":"image/jpeg",
 			"name":"KARI_Color_1K",
-			"uri":"finalanimationcolors/KARI_Color_1K.jpg"
+			"uri":"newcolorsposture/KARI_Color_1K.jpg"
 		},
 		{
 			"mimeType":"image/jpeg",
 			"name":"Eyelashes_color",
-			"uri":"finalanimationcolors/Eyelashes_color.jpg"
+			"uri":"newcolorsposture/Eyelashes_color.jpg"
 		},
 		{
 			"mimeType":"image/jpeg",
 			"name":"HeadMale_Normal",
-			"uri":"finalanimationcolors/HeadMale_Normal.jpg"
+			"uri":"newcolorsposture/HeadMale_Normal.jpg"
 		},
 		{
 			"mimeType":"image/jpeg",
 			"name":"HeadMale_Color",
-			"uri":"finalanimationcolors/HeadMale_Color.jpg"
+			"uri":"newcolorsposture/HeadMale_Color.jpg"
 		},
 		{
 			"mimeType":"image/jpeg",
 			"name":"LeftCornea_Color",
-			"uri":"finalanimationcolors/LeftCornea_Color.jpg"
+			"uri":"newcolorsposture/LeftCornea_Color.jpg"
 		},
 		{
 			"mimeType":"image/jpeg",
 			"name":"RightCornea_Color",
-			"uri":"finalanimationcolors/RightCornea_Color.jpg"
+			"uri":"newcolorsposture/RightCornea_Color.jpg"
 		},
 		{
 			"mimeType":"image/jpeg",
 			"name":"Teeth_Normal",
-			"uri":"finalanimationcolors/Teeth_Normal.jpg"
+			"uri":"newcolorsposture/Teeth_Normal.jpg"
 		},
 		{
 			"mimeType":"image/jpeg",
 			"name":"Teeth_Color",
-			"uri":"finalanimationcolors/Teeth_Color.jpg"
+			"uri":"newcolorsposture/Teeth_Color.jpg"
 		}
 	],
 	"skins":[
@@ -101953,7 +101953,7 @@
 	"buffers":[
 		{
 			"byteLength":12331096,
-			"uri":"finalanimation.bin"
+			"uri":"newanimation.bin"
 		}
 	]
 }

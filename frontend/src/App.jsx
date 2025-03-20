@@ -19,6 +19,8 @@ import Notifications from './Components/Notification'
 import AllAnalysis from './Components/Analytics'
 import { div } from "three/tsl";
 import Settings from "./Components/Settings";
+import AnimePosture from "./Components/finalposture"
+import Development from "./Components/develop";
 
 function App() {
   return (
@@ -40,6 +42,8 @@ function App() {
         <Route path="/analysis" element={<AllAnalysis />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/model" element={<PostureModel />} />
+        <Route path="/final" element={<AnimePosture />} />
+        <Route path="/developer" element={<Development />} />
         <Route path="/notifications" element={<Notifications />} /> {/* ✅ Add Notifications Route */}
       </Routes>
 

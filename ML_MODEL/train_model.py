@@ -7,7 +7,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 
 # 1. Load dataset
-file_path = r"./fsr_data.csv"  # Updated Path
+file_path = r"./fsr_data_1.csv"  # Updated Path
 df = pd.read_csv(file_path)
 
 # 2. Select FSR features and target variable

@@ -32,11 +32,7 @@ export default function Dashboard() {
   const [showExercise, setShowExercise] = useState(false);
   const [sittingThreshold, setSittingThreshold] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
-  const radius = 50;
-    const circumference = 2 * Math.PI * radius;
-    const progress = (countdown / (chairData?.relaxation_time || 30)) * circumference;
   const navigate = useNavigate();
-  
 
   // useEffect(() => {
   //   const fetchUserData = async () => {
@@ -337,33 +333,7 @@ const formatDuration = (seconds) => {
     console.log("Exercise Popup Triggered");
     setShowExercise(true);
   };
-
   
-  useEffect(() => {
-      if (chairData && chairData.relaxation_time > 0) {
-          setCountdown(chairData.relaxation_time);
-          const interval = setInterval(() => {
-              setCountdown(prev => (prev > 0 ? prev - 1 : 0));
-          }, 1000);
-
-          return () => clearInterval(interval);
-      }
-  }, [chairData]);
-
-
-  const getCircularProgress = () => {
-      const percentage = (countdown / chairData.relaxation_time) * 100;
-      return `conic-gradient(#4CAF50 ${percentage}%, #ddd ${percentage}% 100%)`;
-  };
-  
-  useEffect(() => {
-    if (countdown > 0) {
-        const timer = setInterval(() => {
-            setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
-        }, 1000);
-        return () => clearInterval(timer);
-    }
-}, [countdown]);
 
   return (
     
@@ -393,7 +363,7 @@ const formatDuration = (seconds) => {
         <button onClick={() => navigate('/ai')} className='sidebar-button'>Ask AI</button>
         <button onClick={() => navigate('/analysis')} className='sidebar-button'>Detailed Analysis</button>
         <button onClick={() => navigate('/settings')} className='sidebar-button'>SETTINGS</button>
-        <button onClick={() => navigate('/developer')} className='sidebar-button'>Developvers Page</button>
+        <button onClick={() => navigate('/developer')} className='sidebar-button'>Developvers Page </button>
         <button onClick={handleLogout} className='sidebar-button logout-btn'>🚪 Logout</button>
         {/* <button onClick={handleShowExercise}>Show Exercise</button> */}
 
@@ -401,92 +371,67 @@ const formatDuration = (seconds) => {
 
       {/* Main Content */}
       <div className="main-content">
-        <div className="navbar">
-          <div className="nav-left">
-            <h1>Dashboard</h1>
-          </div>
-          <div className="nav-right">
-            <span className="notification-icon">🔔</span>
-            <button className="nav-button">⚙️ Settings</button>
-          </div>
-        </div>
+     
 
 
-         <AnimePosture/>
+         {/* <AnimePosture/> */}
 
 
 
 
 
         {/* Sensor Readings & IoT Live Feed */}
-        <div className="row" >
-  <div
-    className="box readings-box"
-   
-  >
+        <div className="row">
+  <div className="box readings-box" style={{ position: "relative", width: "100%", height: "400px" }}>
     <h2>📊 Today's Sensor Readings</h2>
     {sensorData ? (
       <div className="reading-card">
-        <p>
-          Sitting Duration: <span>{formatDuration(sensorData.sittingDuration)}</span>
-        </p>
-        <p>
-          Weight: <span>{sensorData.weight}</span>
-        </p>
-        <p>
-          Total Sitting Duration: <span>{formatDuration(sensorData.totalsittingduration)}</span>
-        </p>
-        {chairData ? (
-          <div>
-            <p>
-              Chair ID: <span>{chairData.chair_id}</span>
-            </p>
-            <p>
-              Sitting Threshold: <span>{formatDuration(chairData.sitting_threshold)}</span>
-            </p>
-          </div>
-        ) : (
-          <p>No chair data available</p>
-        )}
+        <p>Sitting Duration: <span>{formatDuration(sensorData.sittingDuration)}</span></p>
+        <p>FSR Reading 1: <span>{sensorData.fsr1}</span></p>
+        <p>FSR Reading 2: <span>{sensorData.fsr2}</span></p>
+        <p>FSR Reading 3: <span>{sensorData.fsr3}</span></p>
+        <p>FSR Reading 4: <span>{sensorData.fsr4}</span></p>
+        {/* <p>FSR Reading 5: <span>{sensorData.fsr5}</span></p>
+        <p>FSR Reading 6: <span>{sensorData.fsr6}</span></p> */}
+        <p>Weight: <span>{sensorData.weight}</span></p>
+        <p>Total Sitting Duration: <span>{formatDuration(sensorData.totalsittingduration)}</span></p>
         <p className="timestamp">⏱ {new Date(sensorData.timestamp).toLocaleString()}</p>
+
+       
       </div>
+
+      
     ) : (
       <p>No data available for today</p>
     )}
+    
+     {/* {showExercise && <SettingsPage />} */}
   </div>
-
- 
-  <div className="box chair-box1" >
-    <div className="countdown-container">
-      <p>Relaxation Time:</p>
-      <div className="circular-timer">
-        <svg width="120" height="120">
-          <circle cx="60" cy="60" r="50" className="timer-circle-bg" />
-          <circle
-            cx="60"
-            cy="60"
-            r="50"
-            className="timer-circle"
-            strokeDasharray={circumference}
-            strokeDashoffset={circumference - progress}
-            style={{ stroke: countdown > 10 ? "#4CAF50" : "#FF3D00" }} // Green > 10s, Red <= 10s
-          />
-        </svg>
-        <div className="countdown-text">
-          <h2>{formatDuration(countdown)}</h2>
-        </div>
+  
+  <div className="box chair-box " style={{ position: "relative", width: "100%", height: "400px" }}>
+    <h2>🪑 Chair Data</h2>
+    {chairData ? (
+      <div>
+        <p>Chair ID: <span>{chairData.chair_id} </span></p>
+        <p>Sitting Threshold: <span>{formatDuration(chairData.sitting_threshold)}</span></p>
+        <p>Relaxation Time: <span>{formatDuration(chairData.relaxation_time)}</span></p>
+        {countdown !== null && (
+          <div className="countdown-container">
+            <p>Countdown: <span>{formatDuration(countdown)}</span></p>
+            <div className="circular-timer"></div>
+          </div>
+        )}
       </div>
-    </div>
+    ) : (
+      <p>No chair data available</p>
+    )}
+     
   </div>
-
-  <div className="animate">
-<PostureModel />
-
-</div>
 
   
-</div>
 
+
+</div>
 
 <div>
    {showExercise && <SettingsPage onClose={() => setShowExercise(false)} />}
@@ -494,7 +439,7 @@ const formatDuration = (seconds) => {
    </div>
 
  {/* Data Analysis */}
-        <div className="row">
+        {/* <div className="row">
           <div className="box1">
             <h2>📊 Data Analysis</h2>
             <GraphPage />
@@ -509,7 +454,7 @@ const formatDuration = (seconds) => {
           </div>
         
          
-        </div>
+        </div> */}
       </div>
     </div>
   );

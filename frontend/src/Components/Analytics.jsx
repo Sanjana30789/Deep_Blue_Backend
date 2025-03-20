@@ -1,215 +1,211 @@
 import React, { useState, useEffect } from "react";
-import { Line, Bar, Pie, Scatter } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, ArcElement, Tooltip, Legend } from "chart.js";
-import Heatmap from "react-heatmap-grid"; // Heatmap for sitting behavior
+import { useNavigate } from "react-router-dom";
+import { Bar, Line, Scatter, Pie, Radar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  RadialLinearScale,
+} from "chart.js";
 import "./Analytics.css";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, ArcElement, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  RadialLinearScale
+);
 
-export default function AllAnalysis() {
+export default function FinalAnalysis() {
   const [sensorData, setSensorData] = useState([]);
-  const [user, setUser] = useState(null);
+  const [dataCount, setDataCount] = useState(0);
+  const navigate = useNavigate(); // Navigation hook
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchSensorData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.error("No token found.");
-          return;
-        }
-
-        const response = await fetch("http://localhost:5000/api/auth/user", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        const userData = await response.json();
-        if (response.ok) {
-          setUser(userData);
-          if (userData?.chair_id) {
-            fetchSensorData(userData.chair_id);
-          }
-        } else {
-          console.error("Error fetching user:", userData.msg);
-        }
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-
-    const fetchSensorData = async (chair_id) => {
-      try {
-        const response = await fetch(`http://localhost:5000/data/${chair_id}`);
+        const response = await fetch(`http://localhost:5000/data/ALPHA`);
         if (!response.ok) throw new Error(`API Error: ${response.status}`);
 
         const data = await response.json();
-        setSensorData(Array.isArray(data) ? data : data.data);
+        setSensorData(Array.isArray(data) ? data : []);
+        setDataCount(data.length);
       } catch (error) {
         console.error("Error fetching sensor data:", error);
       }
     };
 
-    fetchUserData();
+    fetchSensorData();
+    const interval = setInterval(fetchSensorData, 10000);
+    return () => clearInterval(interval);
   }, []);
 
-  // Extracting timestamps, sitting duration, and weight
-  const timestamps = sensorData.map((d) => new Date(d.timestamp));
-  const sittingDurationData = sensorData.map((d) => d.sittingDuration);
+  // Extracting values for graphs
+  const timestamps = sensorData.map((d) =>
+    new Date(d.timestamp).toLocaleTimeString()
+  );
+  const days = sensorData.map((d) =>
+    new Date(d.timestamp).toLocaleDateString()
+  );
+
+  const fsr1Data = sensorData.map((d) => d.fsr1);
+  const fsr2Data = sensorData.map((d) => d.fsr2);
+  const fsr3Data = sensorData.map((d) => d.fsr3);
+  const fsr4Data = sensorData.map((d) => d.fsr4);
   const weightData = sensorData.map((d) => d.weight);
+  const sittingDurationData = sensorData.map((d) => d.sittingDuration);
 
-  // ===========================
-  // ✅ Weight Analysis
-  // ===========================
-  const days = sensorData.map((d) => new Date(d.timestamp).toLocaleDateString());
-
-  // Group weight by days
-  const dailyWeightData = {};
-  days.forEach((day, index) => {
-    if (!dailyWeightData[day]) dailyWeightData[day] = [];
-    dailyWeightData[day].push(weightData[index]);
-  });
-
-  // Calculate daily average weight
-  const dailyWeightLabels = Object.keys(dailyWeightData);
-  const dailyWeightValues = dailyWeightLabels.map((day) => {
-    const weights = dailyWeightData[day];
-    return weights.reduce((sum, w) => sum + w, 0) / weights.length;
-  });
-
-  // ===========================
-  // ✅ Sitting Duration Analysis
-  // ===========================
-
-  // 🔹 Group by hours for daily trends
-  const hourlyData = {};
-  timestamps.forEach((timestamp, index) => {
-    const hour = timestamp.getHours();
-    hourlyData[hour] = (hourlyData[hour] || 0) + sittingDurationData[index];
-  });
-
-  const dailyHours = Object.keys(hourlyData);
-  const dailyDurations = Object.values(hourlyData);
-
-  // 🔹 Group by days for weekly trends
+  // Group data by day for weekly trends
   const dailySittingData = {};
-  timestamps.forEach((timestamp, index) => {
-    const date = timestamp.toLocaleDateString();
-    dailySittingData[date] = (dailySittingData[date] || 0) + sittingDurationData[index];
+  days.forEach((day, index) => {
+    dailySittingData[day] =
+      (dailySittingData[day] || 0) + sittingDurationData[index];
   });
 
-  const weeklyLabels = Object.keys(dailySittingData);
-  const weeklyValues = Object.values(dailySittingData);
-
-  // 🔹 Create Heatmap Data Structure
-  const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-  const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
-
-  const heatmapData = new Array(7).fill(0).map(() => new Array(24).fill(0));
-
-  // 🔹 Adjusted heatmap data calculation
-timestamps.forEach((timestamp, index) => {
-  let dayIndex = timestamp.getDay(); // 0 = Sunday, 6 = Saturday
-  if (dayIndex === 0) dayIndex = 6; // Adjust Sunday to last index
-
-  const hourIndex = timestamp.getHours();
-  heatmapData[dayIndex][hourIndex] += sittingDurationData[index] || 0;
-});
-
-
-  // ===========================
-  // ✅ Posture Analysis (Right vs Wrong)
-  // ===========================
-  const postureData = {
-    labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-    datasets: [
-      {
-        label: "Right Posture (%)",
-        data: [80, 75, 78, 85, 88, 90, 92], // Example data
-        backgroundColor: "green",
-      },
-      {
-        label: "Wrong Posture (%)",
-        data: [20, 25, 22, 15, 12, 10, 8], // Example data
-        backgroundColor: "red",
-      },
-    ],
-  };
-
-  // No need to redefine dailySittingData as it's already defined above
-  const dailySittingLabels = Object.keys(dailySittingData);
-  const dailySittingValues = Object.values(dailySittingData);
+  const weeklySittingLabels = Object.keys(dailySittingData);
+  const weeklySittingValues = Object.values(dailySittingData);
 
   return (
     <div className="analysis-container">
-      <h1>📊 Weight & Sitting Analysis</h1>
+      {/* Back to Dashboard Button */}
+      <button className="back-button" onClick={() => navigate("/dashboard")}>
+        ← Back to Dashboard
+      </button>
 
-      {/* Charts Grid Layout - Weight Analysis */}
-      <div className="chart-grid">
-        <div className="chart-card">
-          <h3>📈 Weight Trends Over Time</h3>
-          <Line data={{ labels: dailyWeightLabels, datasets: [{ label: "Avg Weight Per Day (kg)", data: dailyWeightValues, borderColor: "blue", tension: 0.2 }] }} />
-        </div>
+      <h1>📊 Final Analysis of Sensor Data</h1>
 
-        <div className="chart-card">
-          <h3>⚖️ Weight Distribution</h3>
-          <Pie data={{ labels: ["Light (<60kg)", "Average (60-90kg)", "Heavy (>90kg)"], datasets: [{ data: [weightData.filter((w) => w < 60).length, weightData.filter((w) => w >= 60 && w <= 90).length, weightData.filter((w) => w > 90).length], backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"] }] }} />
-        </div>
+      {/* Data Counter */}
+      <div className="data-counter">
+        <h2>📌 Total Records in Database: {dataCount}</h2>
       </div>
 
-      {/* Charts Grid Layout - Sitting Duration */}
-      <div className="chart-grid">
+      {/* Graphs Grid */}
+      <div className="charts-grid">
+        {/* Line Chart - FSR Readings Over Time */}
         <div className="chart-card">
-          <h3>📅 Daily Sitting Trends</h3>
-          <Bar data={{ labels: dailyHours, datasets: [{ label: "Sitting Duration (mins)", data: dailyDurations, backgroundColor: "blue" }] }} />
-        </div>
-
-        <div className="chart-card">
-          <h3>📈 Weekly Sitting Patterns</h3>
-          <Line data={{ labels: weeklyLabels, datasets: [{ label: "Total Sitting Duration per Day (mins)", data: weeklyValues, borderColor: "green", tension: 0.2 }] }} />
-        </div>
-      </div>
-
-      {/* Charts Grid Layout - Posture and Sitting Duration */}
-      <div className="chart-grid">
-        {/* ✅ Right vs Wrong Posture Bar Chart */}
-        <div className="chart-card">
-          <h3>📊 Right vs Wrong Posture vs Day</h3>
-          <Bar data={postureData} />
-        </div>
-
-        {/* ✅ Average Sitting Duration Per Day Bar Chart */}
-        <div className="chart-card">
-          <h3>⏳ Average Sitting Duration Per Day</h3>
-          <Bar
+          <h3>📈 FSR Readings Over Time</h3>
+          <Line
             data={{
-              labels: dailySittingLabels,
-              datasets: [{ label: "Sitting Duration (mins)", data: dailySittingValues, backgroundColor: "blue" }],
+              labels: timestamps,
+              datasets: [
+                { label: "FSR1", data: fsr1Data, borderColor: "red", tension: 0.1 },
+                { label: "FSR2", data: fsr2Data, borderColor: "blue", tension: 0.1 },
+                { label: "FSR3", data: fsr3Data, borderColor: "green", tension: 0.1 },
+                { label: "FSR4", data: fsr4Data, borderColor: "purple", tension: 0.1 },
+              ],
             }}
           />
         </div>
-      </div>
 
-      {/* ✅ Heatmap of Sitting Behavior */}
-      <div className="chart-card heatmap-container">
-        <h3>🔥 Heatmap of Sitting Behavior</h3>
-        <div className="heatmap-wrapper">
-          <Heatmap 
-            xLabels={hours} 
-            yLabels={weekDays} 
-            data={heatmapData}
-            height={40}  
-            squares
-            cellStyle={(background, value) => ({
-              background: `rgba(0, 123, 255, ${value / 100})`, 
-              border: "1px solid white",
-              color: value ? "white" : "black",
-            })}
-            xLabelsStyle={{ fontSize: "12px", color: "#333", transform: "rotate(-45deg)" }} 
-            yLabelsStyle={{ fontSize: "14px", fontWeight: "bold" }}
+        {/* Bar Chart - Sitting Duration Trends */}
+        <div className="chart-card">
+          <h3>📊 Sitting Duration Trends</h3>
+          <Bar
+            data={{
+              labels: timestamps,
+              datasets: [
+                {
+                  label: "Sitting Duration (mins)",
+                  data: sittingDurationData,
+                  backgroundColor: "rgba(75,192,192,0.6)",
+                },
+              ],
+            }}
+          />
+        </div>
+
+        {/* Weekly Sitting Trends */}
+        <div className="chart-card">
+          <h3>📅 Weekly Sitting Patterns</h3>
+          <Bar
+            data={{
+              labels: weeklySittingLabels,
+              datasets: [
+                {
+                  label: "Total Sitting Duration per Day (mins)",
+                  data: weeklySittingValues,
+                  backgroundColor: "rgba(255,99,132,0.6)",
+                },
+              ],
+            }}
+          />
+        </div>
+
+        {/* Scatter Plot - FSR Readings */}
+        <div className="chart-card">
+          <h3>🔍 FSR Readings Scatter Plot</h3>
+          <Scatter
+            data={{
+              datasets: [
+                {
+                  label: "FSR1",
+                  data: fsr1Data.map((val, index) => ({ x: index, y: val })),
+                  backgroundColor: "red",
+                },
+                {
+                  label: "FSR2",
+                  data: fsr2Data.map((val, index) => ({ x: index, y: val })),
+                  backgroundColor: "blue",
+                },
+              ],
+            }}
+          />
+        </div>
+
+        {/* Radar Chart - FSR Comparison */}
+        <div className="chart-card">
+          <h3>🛡️ FSR Comparison (Radar Chart)</h3>
+          <Radar
+            data={{
+              labels: ["FSR1", "FSR2", "FSR3", "FSR4"],
+              datasets: [
+                {
+                  label: "FSR Readings",
+                  data: [
+                    fsr1Data.reduce((a, b) => a + b, 0) / fsr1Data.length,
+                    fsr2Data.reduce((a, b) => a + b, 0) / fsr2Data.length,
+                    fsr3Data.reduce((a, b) => a + b, 0) / fsr3Data.length,
+                    fsr4Data.reduce((a, b) => a + b, 0) / fsr4Data.length,
+                  ],
+                  backgroundColor: "rgba(255, 99, 132, 0.2)",
+                  borderColor: "rgb(255, 99, 132)",
+                  borderWidth: 2,
+                },
+              ],
+            }}
+          />
+        </div>
+
+        {/* Pie Chart - Weight Distribution */}
+        <div className="chart-card">
+          <h3>⚖️ Weight Distribution</h3>
+          <Pie
+            data={{
+              labels: ["Light (<60kg)", "Average (60-90kg)", "Heavy (>90kg)"],
+              datasets: [
+                {
+                  data: [
+                    weightData.filter((w) => w < 60).length,
+                    weightData.filter((w) => w >= 60 && w <= 90).length,
+                    weightData.filter((w) => w > 90).length,
+                  ],
+                  backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+                },
+              ],
+            }}
           />
         </div>
       </div>

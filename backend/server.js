@@ -145,57 +145,113 @@ app.post('/data', async (req, res) => {
 // });
 
 
+// app.put('/data/:chair_id', async (req, res) => {
+//   try {
+//     console.log("Received data:", req.body); // Debug request body
+
+//     const existingData = await Data.findOne({ chair_id: req.params.chair_id.trim() });
+
+//     if (!existingData) {
+//       return res.status(404).json({ message: "Data not found" });
+//     }
+
+//     if (!Array.isArray(existingData.history)) {
+//       existingData.history = [];
+//     }
+
+//     existingData.history.push({
+//       sittingDuration: existingData.sittingDuration,
+//       fsr1: existingData.fsr1,
+//       fsr2: existingData.fsr2,
+//       fsr3: existingData.fsr3,
+//       fsr4: existingData.fsr4,
+//       totalsittingduration: existingData.totalsittingduration,
+//       timestamp: existingData.timestamp,
+//       weight: existingData.weight,
+//     });
+
+    
+//     Object.assign(existingData, {
+//       fsr1: req.body.fsr1 ?? existingData.fsr1,
+//       fsr2: req.body.fsr2 ?? existingData.fsr2,
+//       fsr3: req.body.fsr3 ?? existingData.fsr3,
+//       fsr4: req.body.fsr4 ?? existingData.fsr4,
+//       totalsittingduration: req.body.totalsittingduration ?? existingData.totalsittingduration,
+//       weight: req.body.weight ?? existingData.weight,
+//       // Ensuring fsr6 updates
+//       timestamp: new Date()
+//     });
+
+//     console.log("Before saving:", existingData); // Debug before saving
+
+//     await existingData.save();
+
+//     console.log("Updated document in DB:", await Data.findOne({ chair_id: req.params.chair_id.trim() }));
+
+//     res.json({ message: "Data updated successfully", updatedData: existingData });
+
+//   } catch (err) {
+//     console.error("Error updating data:", err);
+//     res.status(500).json({ message: err.message });
+//   }
+// });
+
 app.put('/data/:chair_id', async (req, res) => {
   try {
-    console.log("Received data:", req.body); // Debug request body
+    console.log("Received data:", req.body);
 
-    const existingData = await Data.findOne({ chair_id: req.params.chair_id.trim() });
+    const { chair_id } = req.params;
+    if (!chair_id) return res.status(400).json({ message: "Chair ID is required" });
 
-    if (!existingData) {
-      return res.status(404).json({ message: "Data not found" });
-    }
+    // Find the existing document
+    const existingData = await Data.findOne({ chair_id: chair_id.trim() });
+    if (!existingData) return res.status(404).json({ message: "Data not found" });
 
+    // Append the current data to history before updating
     if (!Array.isArray(existingData.history)) {
       existingData.history = [];
     }
-
     existingData.history.push({
       sittingDuration: existingData.sittingDuration,
       fsr1: existingData.fsr1,
       fsr2: existingData.fsr2,
       fsr3: existingData.fsr3,
       fsr4: existingData.fsr4,
-      fsr5: existingData.fsr5,
-      fsr6: existingData.fsr6,
       totalsittingduration: existingData.totalsittingduration,
-      timestamp: existingData.timestamp,
       weight: existingData.weight,
+      timestamp: existingData.timestamp,
     });
 
-    // ✅ Ensure fsr5 and fsr6 are updated
-    Object.assign(existingData, {
-      fsr1: req.body.fsr1 ?? existingData.fsr1,
-      fsr2: req.body.fsr2 ?? existingData.fsr2,
-      fsr3: req.body.fsr3 ?? existingData.fsr3,
-      fsr4: req.body.fsr4 ?? existingData.fsr4,
-      fsr5: req.body.fsr5 ?? existingData.fsr5, // Ensuring fsr5 updates
-      fsr6: req.body.fsr6 ?? existingData.fsr6, // Ensuring fsr6 updates
-      timestamp: new Date()
-    });
+    // **Use findOneAndUpdate for atomic update**
+    const updatedData = await Data.findOneAndUpdate(
+      { chair_id: chair_id.trim() }, // Find condition
+      {
+        $set: {
+          sittingDuration: req.body.sittingDuration ?? existingData.sittingDuration,  // ✅ Added sittingDuration
+          fsr1: req.body.fsr1 ?? existingData.fsr1,
+          fsr2: req.body.fsr2 ?? existingData.fsr2,
+          fsr3: req.body.fsr3 ?? existingData.fsr3,
+          fsr4: req.body.fsr4 ?? existingData.fsr4,
+          totalsittingduration: req.body.totalsittingduration ?? existingData.totalsittingduration,
+          weight: req.body.weight ?? existingData.weight,
+          timestamp: new Date(),
+        },
+        $push: { history: existingData.history[existingData.history.length - 1] } // Add to history array
+      },
+      { new: true } // Return updated document
+    );
 
-    console.log("Before saving:", existingData); // Debug before saving
+    console.log("Updated document in DB:", updatedData);
 
-    await existingData.save();
-
-    console.log("Updated document in DB:", await Data.findOne({ chair_id: req.params.chair_id.trim() }));
-
-    res.json({ message: "Data updated successfully", updatedData: existingData });
+    res.json({ message: "Data updated successfully", updatedData });
 
   } catch (err) {
     console.error("Error updating data:", err);
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal Server Error", error: err.message });
   }
 });
+
+
 
 
 
