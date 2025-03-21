@@ -26,23 +26,62 @@ ChartJS.register(
 
 export default function Sitting() {
   const [sensorData, setSensorData] = useState([]);
+   const [user, setUser] = useState(null);
+    const [currentSittingDuration, setCurrentSittingDuration] = useState(0);
+     const [lastUpdated, setLastUpdated] = useState(new Date());
 
   useEffect(() => {
-    const fetchSensorData = async () => {
+    const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/data/PRAM`); // Replace with dynamic chair_id if needed
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("No token found.");
+          return;
+        }
+
+        const response = await fetch("http://localhost:5000/api/auth/user", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const userData = await response.json();
+        if (response.ok) {
+          setUser(userData);
+          if (userData?.chair_id) {
+            fetchSensorData(userData.chair_id);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    const fetchSensorData = async (chair_id) => {
+      try {
+        const response = await fetch(`http://localhost:5000/data/${chair_id}`);
         if (!response.ok) throw new Error(`API Error: ${response.status}`);
 
         const data = await response.json();
         const processedData = Array.isArray(data) ? data : data.data;
         setSensorData(processedData);
+
+        if (processedData.length > 0) {
+          const latestReading = processedData[processedData.length - 1];
+          setCurrentSittingDuration(latestReading.sittingDuration);
+          setLastUpdated(new Date(latestReading.timestamp));
+        }
       } catch (error) {
         console.error("Error fetching sensor data:", error);
       }
     };
 
-    fetchSensorData();
-    const interval = setInterval(fetchSensorData, 1000);
+    fetchUserData();
+    const interval = setInterval(() => {
+      fetchUserData();
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);

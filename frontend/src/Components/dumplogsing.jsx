@@ -124,8 +124,8 @@ const styles = {
   },
   formContainer: {
     width: "100%",
-    maxWidth: "420px",
-    padding: "40px 30px",
+    maxWidth: "360px", // Decreased width for a more compact form
+    padding: "30px 20px", // Adjusted padding
     background: "rgba(255, 255, 255, 0.95)",
     borderRadius: "16px",
     boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
@@ -136,7 +136,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: "30px",
+    marginBottom: "20px", // Reduced margin
   },
   logo: {
     width: "40px",
@@ -158,15 +158,15 @@ const styles = {
     color: "#333",
   },
   heading: {
-    fontSize: "28px",
+    fontSize: "24px", // Decreased font size
     fontWeight: "700",
     color: "#333",
     marginBottom: "8px",
   },
   subheading: {
-    fontSize: "16px",
+    fontSize: "14px", // Decreased font size
     color: "#666",
-    marginBottom: "30px",
+    marginBottom: "20px", // Adjusted margin
   },
   form: {
     display: "flex",
@@ -174,19 +174,19 @@ const styles = {
     width: "100%",
   },
   inputGroup: {
-    marginBottom: "20px",
+    marginBottom: "15px", // Adjusted margin
     textAlign: "left",
   },
   label: {
     display: "block",
-    marginBottom: "8px",
+    marginBottom: "6px", // Adjusted margin
     fontSize: "14px",
     fontWeight: "600",
     color: "#555",
   },
   input: {
     width: "100%",
-    padding: "12px 16px",
+    padding: "10px 14px", // Adjusted padding
     border: "1.5px solid #e1e1e1",
     borderRadius: "10px",
     fontSize: "16px",
@@ -196,7 +196,7 @@ const styles = {
   },
   button: {
     width: "100%",
-    padding: "14px",
+    padding: "12px", // Adjusted padding
     marginTop: "10px",
     backgroundColor: "#764ba2",
     color: "white",
@@ -227,7 +227,7 @@ const styles = {
   },
   forgotPassword: {
     textAlign: "right",
-    marginBottom: "20px",
+    marginBottom: "15px", // Adjusted margin
   },
   forgotLink: {
     color: "#764ba2",
@@ -248,7 +248,7 @@ const styles = {
     border: "3px solid white",
   },
   registerPrompt: {
-    marginTop: "30px",
+    marginTop: "20px", // Adjusted margin
     fontSize: "15px",
     color: "#666",
   },

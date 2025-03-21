@@ -6,7 +6,7 @@ const chairSchema = new mongoose.Schema({
   relaxation_time: { type: Number, default: 0 }, // Default value 0 if not provided
   sitting_threshold: { type: Number, default: 30 }, // Default threshold (adjust as needed)
   continuous_vibration: { type: Boolean, default: true }, 
-  measureweight : {type:Boolean ,required:true},// Default to false
+  measureweight : {type:Boolean },// Default to false
   is_object : { type: Boolean, default: false },
 }, { timestamps: true });
   // Adds createdAt & updatedAt fields automatically

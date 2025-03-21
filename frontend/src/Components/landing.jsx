@@ -14,6 +14,7 @@ export default function LandingPage() {
       <div style={styles.overlay}></div>
       <div style={styles.content}>
         <h1 style={styles.heading}>Transform the Way You Sit – Because Comfort Should Be Smart!</h1>
+        {/* Remove any default margin/border that might be causing the line */}
         <p style={styles.paragraph}>Your journey begins here.</p>
         <button style={styles.button} onClick={() => navigate("/signup")}>
           Get Started
@@ -32,6 +33,8 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    // Add to prevent any default borders
+    border: "none",
   },
   backgroundVideo: {
     position: "absolute",
@@ -49,23 +52,32 @@ const styles = {
     width: "100%",
     height: "100%",
     background: "rgba(0, 0, 0, 0.5)", 
+    // Add to ensure no borders
+    border: "none",
   },
   content: {
     position: "relative",
     textAlign: "center",
     color: "#eee",
     zIndex: 2,
+    // Add to remove any borders
+    border: "none",
   },
   heading: {
     fontSize: "3rem",
     fontWeight: "bold",
     marginBottom: "10px",
-    color : "#eee",
+    color: "#eee",
+    // Remove any border that might be causing the line
+    borderBottom: "none",
   },
   paragraph: {
     fontSize: "1.5rem",
     marginBottom: "20px",
-
+    // Add specific styling to remove top borders/margins
+    marginTop: 0,
+    borderTop: "none",
+    paddingTop: "20px", // Add some space instead of relying on margins
   },
   button: {
     padding: "12px 24px",
@@ -78,5 +90,3 @@ const styles = {
     transition: "0.3s ease",
   },
 };
-
-

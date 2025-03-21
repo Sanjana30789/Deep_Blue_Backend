@@ -21,8 +21,6 @@ const dataSchema = new mongoose.Schema({
         fsr2: Number,
         fsr3: Number,
         fsr4: Number,
-        // fsr5: Number,
-        // fsr6: Number,
         totalsittingduration: Number,
         weight: Number,
         timestamp: { type: Date, default: Date.now }

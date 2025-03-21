@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import exercise1 from "../assets/side.mp4";
 import exercise2 from "../assets/chest.mp4";
 import exercise3 from "../assets/leg_to_chest.mp4";
@@ -19,8 +20,8 @@ export default function SettingsPage() {
   const [showExercise, setShowExercise] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
+  const navigate = useNavigate();
 
-  // Show the exercise popup after 5 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowExercise(true);
@@ -28,16 +29,15 @@ export default function SettingsPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Auto-change videos every 5 seconds with animation
   useEffect(() => {
     if (showExercise) {
       const interval = setInterval(() => {
-        setFade(false); // Start fade-out effect
+        setFade(false);
         setTimeout(() => {
           setCurrentIndex((prevIndex) => (prevIndex + 1) % exercises.length);
-          setFade(true); // Start fade-in effect
-        }, 500); // Fade duration is 500ms
-      }, 5000); // Change video every 5 seconds
+          setFade(true);
+        }, 500);
+      }, 5000);
 
       return () => clearInterval(interval);
     }
@@ -45,15 +45,10 @@ export default function SettingsPage() {
 
   return (
     <div style={styles.settingsContainer}>
-      
-
       {showExercise && (
         <div style={styles.exerciseOverlay}>
           <div style={styles.exerciseContainer}>
-            {/* Close Button */}
             <button style={styles.closeButton} onClick={() => setShowExercise(false)}>✖</button>
-
-            {/* Video Slideshow with Animation */}
             <div style={{ ...styles.videoContainer, opacity: fade ? 1 : 0, transition: "opacity 0.5s ease-in-out" }}>
               <video
                 src={exercises[currentIndex].video}
@@ -64,6 +59,7 @@ export default function SettingsPage() {
               />
               <p style={styles.exerciseName}>{exercises[currentIndex].name}</p>
             </div>
+            <button onClick={() => navigate('/exercise')} style={styles.exerciseButton}>🏋️ Exercise</button>
           </div>
         </div>
       )}
@@ -71,15 +67,10 @@ export default function SettingsPage() {
   );
 }
 
-// Inline Styles
 const styles = {
   settingsContainer: {
     padding: "20px",
     textAlign: "center",
-  },
-  heading: {
-    fontSize: "24px",
-    fontWeight: "bold",
   },
   exerciseOverlay: {
     position: "fixed",
@@ -114,7 +105,6 @@ const styles = {
     cursor: "pointer",
   },
   videoContainer: {
-    
     width: "500px",
     height: "570px",
     display: "flex",
@@ -122,7 +112,7 @@ const styles = {
     alignItems: "center",
   },
   exerciseMedia: {
-    padding : "20px",
+    padding: "20px",
     width: "100%",
     height: "570px",
     objectFit: "cover",
@@ -133,5 +123,14 @@ const styles = {
     fontWeight: "bold",
     marginTop: "5px",
   },
+  exerciseButton: {
+    marginTop: "10px",
+    padding: "10px 20px",
+    fontSize: "16px",
+    backgroundColor: "yellowgreen",
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+  }
 };
-

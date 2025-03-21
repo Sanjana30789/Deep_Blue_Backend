@@ -95,7 +95,7 @@ export default function SittingPattern() {
   const formatDuration = (minutes) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    return `${hours}h ${mins}m`;
+    return `${hours}m ${mins}s`;
   };
 
   const processSittingData = () => {
@@ -234,7 +234,7 @@ export default function SittingPattern() {
         </div>
 
         <div className="status-card total-duration">
-          <h2>Total Today</h2>
+          <h2>Total Average Today</h2>
           <div className="duration-display">
             <div className="duration-value">
               {formatDuration(totalDuration)}

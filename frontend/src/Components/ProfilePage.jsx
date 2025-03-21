@@ -103,11 +103,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Last Active Section */}
-      <div className="last-active">
-        <h2>Last Active</h2>
-        <p>{formatDateTime(chairData?.updatedAt)}</p>
-      </div>
+      
     </div>
   );
 }

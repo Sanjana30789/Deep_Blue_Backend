@@ -263,18 +263,21 @@ const formatDuration = (seconds) => {
         </div>
 
         <button onClick={() => navigate('/profile')} className='sidebar-button'>👤 Profile</button>
-        <button onClick={() => navigate('/about')} className='sidebar-button'>ℹ️ About Us</button>
-        <button onClick={() => navigate('/Posture')} className='sidebar-button'> PREDICT POSTURE</button>
-        {/* <button onClick={() => navigate('/model')} className='sidebar-button'>📞 VIDEO</button> */}
-        <button onClick={() => navigate('/health')} className='sidebar-button'>Health Buddy</button>
-        <button onClick={() => navigate('/ai')} className='sidebar-button'>Ask AI</button>
-        <button onClick={() => navigate('/analysis')} className='sidebar-button'>Detailed Analysis</button>
-        <button onClick={() => navigate('/settings')} className='sidebar-button'>SETTINGS</button>
-        <button onClick={() => navigate('/developer')} className='sidebar-button'>Developvers Page</button>
+        <button onClick={() => navigate('/exercise')} className='sidebar-button'>🏋️ Exercise</button>  {/* ✅ New Exercise Button */}
         <button onClick={() => navigate('/last-analysis')} className='sidebar-button'>📊 Weight Analysis</button>
         <button onClick={() => navigate('/sitting-pattern')} className='sidebar-button'>📊 Sitting Analysis</button>
-        <button onClick={() => navigate('/exercise')} className='sidebar-button'>🏋️ Exercise</button>  {/* ✅ New Exercise Button */}
+        <button onClick={() => navigate('/ai')} className='sidebar-button'>Ask AI</button>
+        <button onClick={() => navigate('/settings')} className='sidebar-button'>SETTINGS</button>
+        <button onClick={() => navigate('/analysis')} className='sidebar-button'>Detailed Analysis</button>
+        <button onClick={() => navigate('/Posture')} className='sidebar-button'> PREDICT POSTURE</button>
+        <button onClick={() => navigate('/developer')} className='sidebar-button'>Developvers Page</button>
+        <button onClick={() => navigate('/health')} className='sidebar-button'>Health Buddy</button>
+        <button onClick={() => navigate('/Posture')} className='sidebar-button'> PREDICT POSTURE</button>
+        <button onClick={() => navigate('/about')} className='sidebar-button'>ℹ️ About Us</button>
         <button onClick={handleLogout} className='sidebar-button logout-btn'>🚪 Logout</button>
+        {/* <button onClick={() => navigate('/model')} className='sidebar-button'>📞 VIDEO</button> */}
+      
+        
         {/* <button onClick={handleShowExercise}>Show Exercise</button> */}
 
       </div>
